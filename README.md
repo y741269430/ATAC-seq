@@ -67,6 +67,27 @@
         -S ./bam/${i}.sam 2> ./bam/${i}_map.txt & 
     done
 
+## Generate raw bam (optional) 
+
+    vim atac2_sam2bamop.sh
+
+    #!/bin/bash
+    ## make id.config ##
+    ## sam to bam (samtools) ##
+    ## sorted by position (samtools) ##
+
+    cat filenames | while read i; 
+    do
+    nohup samtools view -@ 4 -h ./bam/${i}.sam | samtools sort -@ 4 -O bam -o ./bam/${i}-sorted-pos.bam &&
+    samtools index -@ 4 ./bam/${i}-sorted-pos.bam & 
+    done
+
+    # mtReads=$(samtools idxstats ./bam/${i}-sorted-pos.bam | grep 'chrM' | cut -f 3)
+    # totalReads=$(samtools idxstats ./bam/${i}-sorted-pos.bam | awk '{SUM += $3} END {print SUM}')
+    # echo '==> mtDNA Content:' $(bc <<< "scale=2;100*$mtReads/$totalReads")'%'
+    # samtools flagstat -@ 10 ./bam/${i}-sorted-pos.bam > ./bam/${i}-sam.stat &
+
+
 ## 5. sam to bam and remove ChrM    
 
     vim atac2_sam2lastbam.sh
