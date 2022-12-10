@@ -133,4 +133,33 @@ The black lists was downloaded from https://www.encodeproject.org/annotations/EN
     nohup intervene venn  -i ../macs2/narrow/*.narrowPeak --save-overlaps &
     nohup intervene upset -i ../m1/*_rmBL.narrowPeak --output ./ &
 
+## deeptools 计算peaks之间的overlaping和correlation  
 
+    conda create -n deeptools
+    conda activate deeptools
+    conda install -c bioconda deeptools
+    
+    nohup multiBamSummary bins --bamfiles bam/*last.bam --minMappingQuality 30 --labels BL6-TG15-ATAC-CT BL6-TG16-ATAC-CT BL6-TG-ATAC-C2 BL6-TG-ATAC-C4 BL6-TG-ATAC-C5 BL6-TG-ATAC-C6 -out readCounts.npz --outRawCounts readCounts.tab && 
+
+    nohup plotCorrelation -in readCounts.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
+
+    vim g3_bam2bw.sh
+
+    #!/bin/bash
+    ## bam to bw ##
+
+    cat filenames | while read i; 
+    do
+    nohup bamCoverage --bam ./bam/${i}.last.bam -o ./bw/${i}.bw --binSize 10 --normalizeUsing RPKM & 
+    # nohup bamCoverage --bam ./bam/${i}.last.bam -o ./bw2/${i}.bw --binSize 10 --normalizeUsing RPGC --effectiveGenomeSize 2652783500 --ignoreForNormalization chrX --extendReads & 
+    done
+
+### 可视化  
+
+    nohup multiBigwigSummary bins -b *.bw -o test.npz && plotCorrelation -in test.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
+
+## louvain 聚类  
+
+    conda activate atac
+
+    python ./louvain.py net_drg_select.csv net_drg_select.gexf 1 &
