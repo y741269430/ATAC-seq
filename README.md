@@ -16,6 +16,12 @@
     conda create -n mqc python=3.6
     conda activate mqc
     pip install multiqc
+    
+## 0. Build the bowtie2 reference genome index (mm30)
+
+    cd /home/yangjiajun/downloads/genome/mm39_GRCm39/ucsc_fa/
+    nohup bowtie2-build GRCm38.primary_assembly.genome.fa \
+    /home/yangjiajun/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39 & 
 
 ## 1. Activate the source and create the folder  
     
