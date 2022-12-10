@@ -1,0 +1,56 @@
+conda activate atac
+
+pip install python-louvain
+pip install networkx
+
+python ../cluster.py name.csv name.gexf 1
+
+################### code
+import csv
+import sys
+from pathlib import Path
+
+import community as community_louvain
+import networkx as nx
+
+
+def compute_cluster(file, gexf_out, resolution=0):
+    with open(file, "r") as f:
+        fc = csv.reader(f)
+        print(fc.__next__())
+        edges = [(i[1], i[2], {"weight": abs(float(i[3]))}) for i in fc]
+        nodes = list(set([i[1] for i in edges]) | set([i[0] for i in edges]))
+    tG = nx.Graph()
+    tG.add_nodes_from(nodes)
+    tG.add_edges_from(edges)
+    
+    tpartition = community_louvain.best_partition(tG, random_state=1, resolution = resolution)
+    print(resolution, set([v for k, v in tpartition.items()]))
+    for k, v in tpartition.items():
+        tG.nodes[k]["partition"] = v + 1
+        tG.nodes[k]["label"] = k
+    
+    cluster_out = Path(gexf_out).with_suffix(".node.csv")
+    print(cluster_out)
+    with open(cluster_out, "w") as f:
+        f.write("Id,Label,cluster\n")
+        for k, v in tpartition.items():
+            f.write(f"{k},{k},{v+1}\n")
+    
+    edge_out = Path(gexf_out).with_suffix(".edge.csv")
+    print(edge_out)
+    edge_f = open(edge_out, "w")
+    with open(file, "r") as f:
+        fc = csv.reader(f)
+        fc.__next__()
+        edge_fc = csv.writer(edge_f)
+        edge_fc.writerow(["Source", "Target","Weight"])
+        for line in fc:
+            edge_fc.writerow([line[1], line[2], line[3]])
+    
+    nx.write_gexf(tG, gexf_out) 
+
+
+file, gexf_out, resolution = sys.argv[1:]
+
+compute_cluster(file, gexf_out, resolution=int(resolution))
