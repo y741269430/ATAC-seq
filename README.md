@@ -1,0 +1,136 @@
+# ATAC-seq
+
+## 0. Build source used for ATAC-seq  
+
+    conda create -n atac
+    conda activate atac
+
+    conda install -c bioconda trim-galore 
+    conda install -c bioconda bowtie2 
+    conda install -c bioconda macs2
+    conda install -c bioconda samtools
+    conda install -c bioconda sambamba
+    conda install -c bioconda bedtools
+    conda install -c bioconda picard
+
+    conda create -n mqc python=3.6
+    conda activate mqc
+    pip install multiqc
+
+## 1. Activate the source and create the folder  
+    
+    conda activate atac  
+    
+    mkdir raw clean bam trim macs2  
+    
+## 2. Write the filenames  
+
+    ls raw/*1.fq.gz |cut -d "_" -f 1 |cut -d "/" -f 2 > filenames
+
+## 3. Trim adaptors
+
+    vim pre_trim.sh
+
+    #!/bin/bash
+    ## trim_galore ##
+
+    cat filenames | while read i; 
+    do
+    # paired end
+    nohup trim_galore -q 25 --phred33 --length 20 -e 0.1 --stringency 1 --paired ./raw/${i}*_1.fq.gz ./raw/${i}*_2.fq.gz -o ./trim &
+
+    # single end
+    # nohup trim_galore -q 25 --phred33 --length 20 -e 0. 1 --stringency 1 ./raw/${i}*_1.fq.gz -o ./trim &
+    done
+
+## 4. Alignment to mm39  
+
+    vim atac1_bw2.sh
+
+    #!/bin/bash
+    ## Alignment to mm39 ##
+
+    mm39="/home/yangjiajun/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39"
+
+    cat filenames | while read i; 
+    do
+    nohup bowtie2 -p 4 --very-sensitive -X 2000 -k 10 \
+        -x ${mm39} \
+        -1 trim/${i}*_val_1.fq.gz 
+        -2 trim/${i}*_val_2.fq.gz 
+        -S ./bam/${i}.sam 2> ./bam/${i}_map.txt & 
+    done
+
+## 5. sam to bam and remove ChrM    
+
+    vim atac2_sam2lastbam.sh
+
+    #!/bin/bash
+    ## make id.config ##
+    ## sam to bam (samtools) ##
+    ## remove ChrM & sorted by position (samtools) ##
+    ## remove duplication (sambamba) ##
+
+    cat filenames | while read i; 
+    do
+    nohup samtools view -@ 4 -h ./bam/${i}.sam | grep -v chrM | samtools sort -@ 4 -O bam -o ./bam/${i}-rmChrM-sorted-pos.bam && 
+    sambamba markdup -r -t 40 --overflow-list-size 600000 ./bam/${i}-rmChrM-sorted-pos.bam ./bam/${i}.last.bam & 
+    done
+
+    # samtools flagstat -@ 10 ./bam/${i}-rmChrM-sorted-pos.bam > ./bam/${i}-rmChrM-sorted-pos.stat &
+    # samtools flagstat -@ 10 ./bam/${i}.last.bam > ./bam/${i}.last.stat &
+
+## 6. macs2 
+
+    vim atac3_macs2.sh
+
+    #!/bin/bash
+    ## make id.config ##
+    ## peak calling (macs2) ##
+
+    cat filenames | while read i; 
+    do
+    nohup macs2 callpeak -t ./bam/${i}.last.bam -g mm --nomodel --shift -75 --extsize 150  -n ./macs2/${i} -q 0.1 --keep-dup all &  
+    done
+
+## Remove blacklist  
+
+The black lists was downloaded from https://www.encodeproject.org/annotations/ENCSR636HFF/  
+
+    vim atac4_rmblackls.sh
+
+    #!/bin/bash
+    ## make id.config ##
+    ## remove blacklist (bedtools) ##
+
+    cat filenames | while read i; 
+    do
+    nohup bedtools intersect -v -a ./macs2/${i}_peaks.narrowPeak -b /home/yangjiajun/downloads/mm10.blacklist_ENCFF547MET.bed | awk '{if($0~"chr") print}' > ./macs2/narrow/${i}_rmBL.narrowPeak & 
+    done
+
+## fastqc  
+
+    nohup fastqc -q -t 30 raw/*.fq.gz -o fqc/ &
+    nohup fastqc -q -t 30 trim/*.fq.gz -o trim_fqc/ &
+
+    nohup multiqc fqc/*.zip -o mqc/ &
+    nohup multiqc trim_fqc/*.zip -o trim_mqc/ &
+
+## IDR计算overlap  
+
+    conda create -n idr
+    conda activate idr
+    conda install -c bioconda idr
+
+    nohup sort -k8,8nr p1.narrowPeak > b1 && sort -k8,8nr p2.narrowPeak > b2 && idr --samples b1 b2 --input-file-type narrowPeak --rank p.value --output-file b12 --plot --log-output-file b12.log &
+
+## intervene 计算peaks之间的overlaping  
+
+    conda create -n intervene
+    conda activate intervene
+    conda install -c bioconda intervene
+
+    nohup intervene venn  -i ../macs2/narrow/*.narrowPeak --save-overlaps &
+    nohup intervene upset -i ../m1/*_rmBL.narrowPeak --output ./ &
+
+
