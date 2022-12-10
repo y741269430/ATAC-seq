@@ -27,7 +27,7 @@
     
     conda activate atac  
     
-    mkdir raw clean bam trim macs2  
+    mkdir -p raw clean trim bam macs2 macs2/narrow   
     
 ## 2. Write the filenames  
 
