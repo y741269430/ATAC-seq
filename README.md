@@ -72,7 +72,6 @@
     vim atac2_sam2bamop.sh
 
     #!/bin/bash
-    ## make id.config ##
     ## sam to bam (samtools) ##
     ## sorted by position (samtools) ##
 
@@ -93,7 +92,6 @@
     vim atac2_sam2lastbam.sh
 
     #!/bin/bash
-    ## make id.config ##
     ## sam to bam (samtools) ##
     ## remove ChrM & sorted by position (samtools) ##
     ## remove duplication (sambamba) ##
@@ -112,7 +110,6 @@
     vim atac3_macs2.sh
 
     #!/bin/bash
-    ## make id.config ##
     ## peak calling (macs2) ##
 
     cat filenames | while read i; 
@@ -127,7 +124,6 @@ The black lists was downloaded from https://www.encodeproject.org/annotations/EN
     vim atac4_rmblackls.sh
 
     #!/bin/bash
-    ## make id.config ##
     ## remove blacklist (bedtools) ##
 
     cat filenames | while read i; 
