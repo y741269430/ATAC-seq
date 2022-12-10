@@ -1,0 +1,13 @@
+14608455   0 in total (QC-passed reads   QC-failed reads) reads总数
+37967   0 secondary                                       出现比对到参考基因组多个位置的reads数
+0   0 supplementary                                       可能存在嵌合的reads数
+0   0 duplicates                                          重复的reads数
+14590894   0 mapped (99.88% : N/A)                        比对到参考基因组上的reads数
+14570488   0 paired in sequencing                         属于PE read的reads总数。
+7285244   0 read1                                         PE read中Read 1 的reads 总数。
+7285244   0 read2                                         PE read中Read 2 的reads 总数。
+14507068   0 properly paired (99.56% : N/A)               完美比对的reads总数。PE两端reads比对到同一条序列，且根据比对结果推断的插入片段大小符合设置的阈值。
+14551500   0 with itself and mate mapped                  PE两端reads都比对上参考序列的reads总数。
+1427   0 singletons (0.01% : N/A)                         PE两端reads，其中一端比上，另一端没比上的reads总数。
+26260   0 with mate mapped to a different chr             PE read中，两端分别比对到两条不同的序列的reads总数。
+17346   0 with mate mapped to a different chr (mapQ>=5)   PE read中，两端分别比对到两条不同
