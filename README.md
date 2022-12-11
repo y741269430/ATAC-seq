@@ -12,7 +12,8 @@
     conda install -c bioconda sambamba
     conda install -c bioconda bedtools
     conda install -c bioconda picard
-
+    conda install -c maximinio macs3
+    
     conda create -n mqc python=3.6
     conda activate mqc
     pip install multiqc
