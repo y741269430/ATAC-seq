@@ -66,8 +66,8 @@
     do
     nohup bowtie2 -p 4 --very-sensitive -X 2000 -k 10 \
         -x ${mm39} \
-        -1 trim/${i}*_val_1.fq.gz 
-        -2 trim/${i}*_val_2.fq.gz 
+        -1 trim/${i}*_val_1.fq.gz \
+        -2 trim/${i}*_val_2.fq.gz \
         -S ./bam/${i}.sam 2> ./bam/${i}_map.txt & 
     done
 
