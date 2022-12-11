@@ -12,6 +12,9 @@
     conda install -c bioconda sambamba
     conda install -c bioconda bedtools
     conda install -c bioconda picard
+    
+    conda create -n macs3 python=3.8
+    conda activate macs3
     conda install -c maximinio macs3
     
     conda create -n mqc python=3.6
@@ -28,7 +31,7 @@
     
     conda activate atac  
     
-    mkdir -p raw clean trim bam macs2 macs2/narrow   
+    mkdir -p raw clean trim bam macs2 macs2/narrow macs3 macs3/narrow  
     
 ## 2. Write the filenames  
 
@@ -117,7 +120,19 @@
     do
     nohup macs2 callpeak -t ./bam/${i}.last.bam -g mm --nomodel --shift -75 --extsize 150  -n ./macs2/${i} -q 0.1 --keep-dup all &  
     done
+    
+## 7. macs3 
 
+    vim atac4_macs3.sh
+
+    #!/bin/bash
+    ## peak calling (macs3) ##
+
+    cat filenames | while read i; 
+    do
+    nohup macs3 callpeak -f BAMPE -t ./bam/${i}.last.bam -g mm -n ./macs3/${i} -B -q 0.1 &  
+    done
+    
 ## Remove blacklist  
 
 The black lists was downloaded from https://www.encodeproject.org/annotations/ENCSR636HFF/  
