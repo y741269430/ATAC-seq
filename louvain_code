@@ -1,11 +1,21 @@
-conda activate atac
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jun 27 14:02:34 2023
 
-pip install python-louvain
-pip install networkx
+@author: yang
+"""
 
-python ../cluster.py name.csv name.gexf 1
+file = "D:\\R work\\CUTTag_TG\\rawcount\\meme_cfa\\genie3_TFs_genes.csv"
 
-################### code
+gexf_out = "D:\\R work\\CUTTag_TG\\rawcount\\meme_cfa\\genie3_output.gexf"
+
+resolution = 1
+
+"""
+当分辨率参数取值较小时，算法更倾向于将节点划分到较小的社区中(聚类数更多)；
+当分辨率参数取值较大时，算法更倾向于将节点划分到较大的社区中(聚类数更少)。
+"""
+
 import csv
 import sys
 from pathlib import Path
@@ -51,6 +61,6 @@ def compute_cluster(file, gexf_out, resolution=0):
     nx.write_gexf(tG, gexf_out) 
 
 
-file, gexf_out, resolution = sys.argv[1:]
+#file, gexf_out, resolution = sys.argv[1:]
 
 compute_cluster(file, gexf_out, resolution=int(resolution))
