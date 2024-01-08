@@ -162,7 +162,18 @@ The black lists was downloaded from https://www.encodeproject.org/annotations/EN
     conda activate idr
     conda install -c bioconda idr
 
-    nohup sort -k8,8nr p1.narrowPeak > b1 && sort -k8,8nr p2.narrowPeak > b2 && idr --samples b1 b2 --input-file-type narrowPeak --rank p.value --output-file b12 --plot --log-output-file b12.log &
+    vim atac5_idr1.sh
+
+    #!/bin/bash
+    ## peak calling (macs3) ##
+    
+    cat filenames | while read i; 
+    do
+    nohup sort -k8,8nr ./macs3/${i}_peaks.narrowPeak > ../idr/${i} &  
+    done
+    
+    nohup sort -k8,8nr p1.narrowPeak > b1 && sort -k8,8nr p2.narrowPeak > b2 &
+    nohup idr --samples b1 b2 --input-file-type narrowPeak --rank p.value --output-file b12 --plot --log-output-file b12.log &
 
 ## intervene 计算peaks之间的overlaping  
 
