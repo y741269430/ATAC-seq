@@ -209,6 +209,22 @@ The black lists was downloaded from https://www.encodeproject.org/annotations/EN
 
     nohup multiBigwigSummary bins -b *.bw -o test.npz && plotCorrelation -in test.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
 
+
+## deeptools 计算bam PE FragmentSize 统计片段长度  
+
+    nohup bamPEFragmentSize -hist fragmentSize_CTRL.png -T "Fragment size of CTRL" --maxFragmentLength 1000 \
+    -b bam/BL6-TG-ATAC-C2.last.bam bam/BL6-TG-ATAC-C4.last.bam bam/BL6-TG-ATAC-C5.last.bam bam/BL6-TG-ATAC-C6.last.bam bam/BL6-TG-ATAC-C7.last.bam bam/BL6-TG-ATAC-C8.last.bam bam/BL6-TG-ATAC-C9.last.bam \
+    --samplesLabel C2 C4 C5 C6 C7 C8 C9 &
+    
+    nohup bamPEFragmentSize -hist fragmentSize_CFA.png -T "Fragment size of CFA" --maxFragmentLength 1000 \
+    -b bam/BL6-TG1-ATAC-CFA3.last.bam bam/BL6-TG2-ATAC-CFA3.last.bam bam/BL6-TG-ATAC-CFA3_1.last.bam bam/BL6-TG-ATAC-CFA3_3.last.bam bam/BL6-TG-ATAC-CFA3_4.last.bam \
+    --samplesLabel TG1-cfa3 TG2-cfa3 cfa31 cfa33 cfa34 &
+    
+    nohup bamPEFragmentSize -hist fragmentSize_IoN.png -T "Fragment size of IoN" --maxFragmentLength 1000 \
+    -b bam/BL6-TG1-ATAC-ION7.last.bam bam/BL6-TG2-ATAC-ION7.last.bam bam/BL6-TG3-ATAC-ION7.last.bam bam/BL6-TG4-ATAC-ION7.last.bam \
+    --samplesLabel ion1 ion2 ion3 ion4 &
+
+
 ## louvain 聚类  
 
     conda activate atac
