@@ -200,14 +200,14 @@
     /home/jjyang/downloads/bedGraphToBigWig ${F}.sort.clip ${G} ${F/bdg/bw}
     
     rm -f ${F}.clip ${F}.sort.clip
-
-    vim atac7.sh
-    #!/bin/bash
-    cat filenames | while read i; 
-    do
-    nohup bash atac6.sh ./macs3/${i}_FE.bdg /home/jjyang/downloads/genome/mm39_GRCm39/ucsc_fa/mm10.chrom.sizes &
-    done
-
+```
+vim atac7.sh
+#!/bin/bash
+cat filenames | while read i; 
+do
+nohup bash atac6.sh ./macs3/${i}_FE.bdg /home/jjyang/downloads/genome/mm39_GRCm39/ucsc_fa/mm10.chrom.sizes &
+done
+```
 ### And then run
     bash atac7.sh
 
