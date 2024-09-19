@@ -1,10 +1,11 @@
 # ATAC-seq workflow
 
-## 0. 创建一个conda环境用于ATACseq分析（也可以用mamba）
+## 0. 创建conda环境用于ATACseq分析（也可以用mamba）
+#### 我这里创建了多个环境，防止软件之间的冲突  
 
+    # 1
     conda create -n atac
     conda activate atac
-
     conda install -c bioconda trim-galore 
     conda install -c bioconda bowtie2 
     conda install -c bioconda macs2
@@ -12,23 +13,25 @@
     conda install -c bioconda sambamba
     conda install -c bioconda bedtools
     conda install -c bioconda picard
-    
+    # 2
     conda create -n macs3 python=3.8
     conda activate macs3
     conda install -c maximinio macs3
     conda install -c bioconda bedtools
-    
+    # 3
     conda create -n mqc python=3.6
     conda activate mqc
     pip install multiqc
+    # 4
+    。。。
     
-## 0. 利用bowtie2构建小鼠基因组（mm39）索引  
+## 0. 利用bowtie2构建小鼠基因组（mm39）索引（构建一次以后都不用做了）  
 
     conda activate atac  
-    cd /home/yangjiajun/downloads/genome/mm39_GRCm39/ucsc_fa/
+    cd /home/jjyang/downloads/genome/mm39_GRCm39/ucsc_fa/
     
     nohup bowtie2-build GRCm38.primary_assembly.genome.fa \
-    /home/yangjiajun/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39 & 
+    /home/jjyang/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39 & 
 
 ## 1.激活环境并创建文件夹   
     
@@ -63,7 +66,7 @@
     #!/bin/bash
     ## Alignment to mm39 ##
 
-    mm39="/home/yangjiajun/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39"
+    mm39="/home/jjyang/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39"
 
     cat filenames | while read i; 
     do
@@ -216,7 +219,7 @@ The black lists was downloaded from https://www.encodeproject.org/annotations/EN
 
     #!/bin/bash
     ## remove blacklist (bedtools) ##
-    Blacklist = "/home/yangjiajun/downloads/mm10.blacklist_ENCFF547MET.bed"
+    Blacklist = "/home/jjyang/downloads/genome/mm39_GRCm39/ENCFF547MET.bed"
     
     cat filenames | while read i; 
     do
@@ -258,7 +261,7 @@ The black lists was downloaded from https://www.encodeproject.org/annotations/EN
     conda activate intervene
     conda install -c bioconda intervene
 
-    nohup intervene venn  -i ../macs2/narrow/*.narrowPeak --save-overlaps &
+    nohup intervene venn  -i ../macs3/narrow/*.narrowPeak --save-overlaps &
     nohup intervene upset -i ../m1/*_rmBL.narrowPeak --output ./ &
 
 ### 3.deeptools 计算peaks之间的overlaping和correlation  
