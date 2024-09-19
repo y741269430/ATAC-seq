@@ -1,6 +1,6 @@
-# ATAC-seq
+# ATAC-seq workflow
 
-## 0. Build source used for ATAC-seq  
+## 0. 创建一个conda环境用于ATACseq分析（也可以用mamba）
 
     conda create -n atac
     conda activate atac
@@ -22,24 +22,25 @@
     conda activate mqc
     pip install multiqc
     
-## 0. Build the bowtie2 reference genome index (mm39)
+## 0. 利用bowtie2构建小鼠基因组（mm39）索引  
 
+    conda activate atac  
     cd /home/yangjiajun/downloads/genome/mm39_GRCm39/ucsc_fa/
     
     nohup bowtie2-build GRCm38.primary_assembly.genome.fa \
     /home/yangjiajun/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39 & 
 
-## 1. Activate the source and create the folder  
+## 1.激活环境并创建文件夹   
     
     conda activate atac  
     
     mkdir -p raw clean trim bam macs2 macs2/narrow macs3 macs3/narrow  
     
-## 2. Write the filenames  
+## 2. 生成一个filenames的文件，用来记录输出的文件名称（样本名称），例如：  
 
     ls raw/*1.fq.gz |cut -d "_" -f 1 |cut -d "/" -f 2 > filenames
 
-## 3. Trim adaptors
+## 3. 利用Trim adaptors去除接头
 
     vim pre_trim.sh
 
@@ -55,7 +56,7 @@
     # nohup trim_galore -q 25 --phred33 --length 20 -e 0. 1 --stringency 1 ./raw/${i}*_1.fq.gz -o ./trim &
     done
 
-## 4. Alignment to mm39  
+## 4. 比对到mm39中  
 
     vim atac1_bw2.sh
 
@@ -73,7 +74,7 @@
         -S ./bam/${i}.sam 2> ./bam/${i}_map.txt & 
     done
 
-## Generate raw bam (optional) 
+## 生成raw bam (optional) 
 
     vim atac2_sam2bamop.sh
 
@@ -111,7 +112,7 @@
     # samtools flagstat -@ 10 ./bam/${i}-rmChrM-sorted-pos.bam > ./bam/${i}-rmChrM-sorted-pos.stat &
     # samtools flagstat -@ 10 ./bam/${i}.last.bam > ./bam/${i}.last.stat &
 
-## 6. macs2 
+## 6. macs2（现已弃用）
 
     vim atac3_macs2.sh
 
@@ -123,7 +124,7 @@
     nohup macs2 callpeak -t ./bam/${i}.last.bam -g mm --nomodel --shift -75 --extsize 150  -n ./macs2/${i} -q 0.1 --keep-dup all &  
     done
     
-## 7. macs3 
+## 7. 使用macs3进行call peak 
 
     vim atac4_macs3.sh
 
@@ -135,31 +136,31 @@
     nohup macs3 callpeak -f BAMPE -t ./bam/${i}.last.bam -g mm -n ./macs3/${i} -B -q 0.1 &  
     done
 
-## 8. macs3 peak to bw 
+## 8. macs3 peak文件转 bw（用于igv可视化） 
 ### 参考：  
 - Build Signal Track https://github.com/macs3-project/MACS/wiki/Build-Signal-Track  
 - bedGraph to bigWig https://gist.github.com/taoliu/2469050  
 - bedGraphToBigWig: error while loading shared libraries: libssl.so.1.0.0: cannot open shared object file: No such file or directory https://github.com/macs3-project/MACS/issues/505  
 -  chromInfo.txt  https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/chromInfo.txt.gz  
-## 首先下载两个脚本：bedGraphToBigWig 和 bedClip
+### 首先下载两个脚本：bedGraphToBigWig 和 bedClip
     wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig
     wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedClip
-## 赋予可执行权限  
+### 赋予可执行权限  
     chmod +x bedGraphToBigWig
     chmod +x bedClip
-## 添加到环境变量中（打开bashrc，添加到最后一行，保存，source）  
+### 添加到环境变量中（打开bashrc，添加到最后一行，保存，source）  
     vim ~/.bashrc
     export PATH="$PATH:/home/jjyang/downloads/bedClip"
     export PATH="$PATH:/home/jjyang/downloads/bedGraphToBigWig"
     source ~/.bashrc
     
-## 执行以下脚本
+### 执行以下脚本
 - -m FE means to calculate fold enrichment. Other options can be logLR for log likelihood, subtract for subtracting noise from treatment sample.  
 - -m FE` 表示计算倍增富集。其他选项可以是 `logLR` 计算对数似然比，`subtract` 用于从处理样本中减去噪声。  
 - -p sets pseudocount. This number will be added to 'pileup per million reads' value. You don't need it while generating fold enrichment track because control lambda will always >0. But in order to avoid log(0) while calculating log likelihood, we'd add pseudocount. Because I set precision as 5 decimals, here I use 0.00001.  
 - -p` 设置伪计数。这个数值将被加到“每百万读段的堆积”值上。在生成倍增富集轨迹时，您不需要它，因为对照组的 lambda 值将总是大于 0。但在计算对数似然比时，为了避免出现 `log(0)` 的情况，我们会添加伪计数。因为我将精度设置为五位小数，所以这里我使用 `0.00001`。  
 
-## Run MACS2 bdgcmp to generate fold-enrichment and logLR track (Then you will have this bedGraph file for fold-enrichment(FE) and logLR)  
+### Run MACS2 bdgcmp to generate fold-enrichment and logLR track (Then you will have this bedGraph file for fold-enrichment(FE) and logLR)  
     vim atac5_bdgcmp.sh
     #!/bin/bash
     ## peak calling (macs3) ##
@@ -169,7 +170,7 @@
     nohup macs3 bdgcmp -t ./macs3/${i}_treat_pileup.bdg -c ./macs3/${i}_control_lambda.bdg -o ./macs3/${i}_FE.bdg -m FE &&
     macs3 bdgcmp -t  ./macs3/${i}_treat_pileup.bdg -c ./macs3/${i}_control_lambda.bdg -o ./macs3/${i}_logLR.bdg -m logLR -p 0.00001 &
     done  
-## Fix the bedGraph and convert them to bigWig files. (And you will have these bigwig files)
+### Fix the bedGraph and convert them to bigWig files. (And you will have these bigwig files)
     vim atac6.sh
     #!/bin/bash
     
@@ -204,10 +205,10 @@
     nohup bash atac6.sh ./macs3/${i}_FE.bdg /home/jjyang/downloads/genome/mm39_GRCm39/ucsc_fa/mm10.chrom.sizes &
     done
 
-## And then run
+### And then run
     bash atac7.sh
 
-## Remove blacklist  
+### Remove blacklist  
 
 The black lists was downloaded from https://www.encodeproject.org/annotations/ENCSR636HFF/  
 
@@ -215,10 +216,11 @@ The black lists was downloaded from https://www.encodeproject.org/annotations/EN
 
     #!/bin/bash
     ## remove blacklist (bedtools) ##
-
+    Blacklist = "/home/yangjiajun/downloads/mm10.blacklist_ENCFF547MET.bed"
+    
     cat filenames | while read i; 
     do
-    nohup bedtools intersect -v -a ./macs2/${i}_peaks.narrowPeak -b /home/yangjiajun/downloads/mm10.blacklist_ENCFF547MET.bed | awk '{if($0~"chr") print}' > ./macs2/narrow/${i}_rmBL.narrowPeak & 
+    nohup bedtools intersect -v -a ./macs3/${i}_peaks.narrowPeak -b ${Blacklist} | awk '{if($0~"chr") print}' > ./macs3/narrow/${i}_rmBL.narrowPeak & 
     done
 
 ## fastqc  
@@ -229,7 +231,9 @@ The black lists was downloaded from https://www.encodeproject.org/annotations/EN
     nohup multiqc fqc/*.zip -o mqc/ &
     nohup multiqc trim_fqc/*.zip -o trim_mqc/ &
 
-## IDR计算overlap  
+## 三种方法计算peaks之间的重叠数量  
+
+### 1.IDR 计算peaks之间的overlaping  
 
     conda create -n idr
     conda activate idr
@@ -248,7 +252,7 @@ The black lists was downloaded from https://www.encodeproject.org/annotations/EN
     nohup sort -k8,8nr p1.narrowPeak > b1 && sort -k8,8nr p2.narrowPeak > b2 &
     nohup idr --samples b1 b2 --input-file-type narrowPeak --rank p.value --output-file b12 --plot --log-output-file b12.log &
 
-## intervene 计算peaks之间的overlaping  
+### 2.intervene 计算peaks之间的overlaping  
 
     conda create -n intervene
     conda activate intervene
@@ -257,7 +261,7 @@ The black lists was downloaded from https://www.encodeproject.org/annotations/EN
     nohup intervene venn  -i ../macs2/narrow/*.narrowPeak --save-overlaps &
     nohup intervene upset -i ../m1/*_rmBL.narrowPeak --output ./ &
 
-## deeptools 计算peaks之间的overlaping和correlation  
+### 3.deeptools 计算peaks之间的overlaping和correlation  
 
     conda create -n deeptools
     conda activate deeptools
