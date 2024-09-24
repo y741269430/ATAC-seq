@@ -1,6 +1,6 @@
 # ATAC-seq workflow
 
-本文主要参考： 
+本文主要参考：  
 https://yiweiniu.github.io/blog/2019/03/ATAC-seq-data-analysis-from-FASTQ-to-peaks/  
 https://github.com/hbctraining/Intro-to-ChIPseq-flipped  
 
