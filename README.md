@@ -1,5 +1,9 @@
 # ATAC-seq workflow
 
+本文主要参考： 
+https://yiweiniu.github.io/blog/2019/03/ATAC-seq-data-analysis-from-FASTQ-to-peaks/  
+https://github.com/hbctraining/Intro-to-ChIPseq-flipped  
+
 ## 0. 创建conda环境用于ATACseq分析（也可以用mamba）
 #### 我这里创建了多个环境，防止软件之间的冲突  
 
