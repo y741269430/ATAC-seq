@@ -306,7 +306,12 @@ The black lists were downloaded from https://www.encodeproject.org/annotations/E
 
 ### 4.bedtools 计算peaks之间的overlaping，输出bed文件  
 
+- `-wo`: Write the original A (file 1) and B (file 2) entries plus the number of base pairs of overlap between the two features.
+- `-f`: Minimum overlap required as a fraction of A. The value ranges from 0 to 1. We will use 0.3, requiring the overlap region being at least 30% of A.
+- `-r`: Require that the fraction overlap be reciprocal for A and B. Together with the `-f` flag above, we require the overlap region being at least 30% of B as well.
+
     bedtools intersect \
+    -wo -f 0.3 -r \
     -a ../macs3/a1_peaks.narrowPeak \
     -b ../macs3/b1_peaks.narrowPeak \
     -wo > a1b1_overlaps.bed
