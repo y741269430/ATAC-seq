@@ -234,7 +234,7 @@ The black lists was downloaded from https://www.encodeproject.org/annotations/EN
     nohup multiqc fqc/*.zip -o mqc/ &
     nohup multiqc trim_fqc/*.zip -o trim_mqc/ &
 
-## 三种方法计算peaks之间的重叠数量  
+## 多种种方法计算peaks之间的重叠数量  
 
 ### 1.IDR 计算peaks之间的overlaping  
 
@@ -242,18 +242,12 @@ The black lists was downloaded from https://www.encodeproject.org/annotations/EN
     conda activate idr
     conda install -c bioconda idr
 
-    vim atac5_idr1.sh
-
-    #!/bin/bash
-    ## peak calling (macs3) ##
-    
-    cat filenames | while read i; 
-    do
-    nohup sort -k8,8nr ./macs3/${i}_peaks.narrowPeak > ../idr/${i} &  
-    done
-    
-    nohup sort -k8,8nr p1.narrowPeak > b1 && sort -k8,8nr p2.narrowPeak > b2 &
-    nohup idr --samples b1 b2 --input-file-type narrowPeak --rank p.value --output-file b12 --plot --log-output-file b12.log &
+    idr --samples ../macs3/a1_peaks.narrowPeak ../macs3/b1_peaks.narrowPeak \
+    --input-file-type narrowPeak \
+    --rank p.value \
+    --output-file ./a1_b1_overlaps \
+    --plot \
+    --log-output-file a1_b1_overlaps.log
 
 ### 2.intervene 计算peaks之间的overlaping  
 
@@ -288,6 +282,13 @@ The black lists was downloaded from https://www.encodeproject.org/annotations/EN
 ### 可视化  
 
     nohup multiBigwigSummary bins -b *.bw -o test.npz && plotCorrelation -in test.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
+
+### 4.bedtools 计算peaks之间的overlaping，输出bed文件  
+
+    bedtools intersect \
+    -a ../macs3/a1_peaks.narrowPeak \
+    -b ../macs3/b1_peaks.narrowPeak \
+    -wo > a1b1_overlaps.bed
 
 
 ## deeptools 计算bam PE FragmentSize 统计片段长度  
