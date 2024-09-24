@@ -139,21 +139,25 @@
     nohup macs3 callpeak -f BAMPE -t ./bam/${i}.last.bam -g mm -n ./macs3/${i} -B -q 0.1 &  
     done
 
-## narrowPeak和bed文件格式  
+## narrowPeak和bed文件格式   
 #### 具体参考https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/01_Introduction_to_peak_files.md   
-#### A narrowPeak (.narrowPeak) file is used by the ENCODE project to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data. The narrowPeak file is a BED6+4 format, which means the first 6 columns of a standard BED file with 4 additional fields:
+
+- A narrowPeak (.narrowPeak) file is used by the ENCODE project to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data. The narrowPeak file is a BED6+4 format, which means the first 6 columns of a standard BED file with 4 additional fields:  
 ![image](https://github.com/y741269430/ATAC-seq/blob/main/img/narrowPeak.png)  
-#### BED files require at least 3 fields indicating the genomic location of the feature, including the chromosome and the start and end coordinates. However, there are 9 additional fields that are optional, as shown in the image below.   
+
+- BED files require at least 3 fields indicating the genomic location of the feature, including the chromosome and the start and end coordinates. However, there are 9 additional fields that are optional, as shown in the image below.   
 ![image](https://github.com/y741269430/ATAC-seq/blob/main/img/bed_file.png)  
-#### Each row in the narrowPeak file represents a called peak. Below is an the example of a narrowPeak file, displaying the coordinate and statistical information for a handful of called peaks.  
+
+- Each row in the narrowPeak file represents a called peak. Below is an the example of a narrowPeak file, displaying the coordinate and statistical information for a handful of called peaks.  
+
 ---
 
 ## 8. macs3 peak文件转 bw（用于igv可视化） 
-### 参考：  
+#### 参考：  
 - Build Signal Track https://github.com/macs3-project/MACS/wiki/Build-Signal-Track  
 - bedGraph to bigWig https://gist.github.com/taoliu/2469050  
 - bedGraphToBigWig: error while loading shared libraries: libssl.so.1.0.0: cannot open shared object file: No such file or directory https://github.com/macs3-project/MACS/issues/505  
--  chromInfo.txt  https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/chromInfo.txt.gz  
+- chromInfo.txt  https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/chromInfo.txt.gz  
 ### 首先下载两个脚本：bedGraphToBigWig 和 bedClip
     wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig
     wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedClip
@@ -220,9 +224,12 @@ done
 ### And then run
     bash atac7.sh
 
-### Remove blacklist  
+## Remove blacklist  
+#### 具体参考 https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md  
 
-The black lists was downloaded from https://www.encodeproject.org/annotations/ENCSR636HFF/  
+> How were the 'blacklists compiled? These blacklists were empirically derived from large compendia of data using a combination of automated heuristics and manual curation. Blacklists were generated for various species and genome versions including human, mouse, worm and fly. The lists can be downloaded here. For human, they used 80 open chromatin tracks (DNase and FAIRE datasets) and 12 ChIP-seq input/control tracks spanning ~60 cell lines in total. These blacklists are applicable to functional genomic data based on short-read sequencing (20-100bp reads). These are not directly applicable to RNA-seq or any other transcriptome data types.  
+More information about the blacklist region is described in this paper. This is a more recent resource and the authors compiled blacklists that can be downloaded here. This is the source for the bed file used in this workshop.  
+The black lists were downloaded from https://www.encodeproject.org/annotations/ENCSR636HFF/   
 
     vim atac4_rmblackls.sh
 
@@ -234,6 +241,7 @@ The black lists was downloaded from https://www.encodeproject.org/annotations/EN
     do
     nohup bedtools intersect -v -a ./macs3/${i}_peaks.narrowPeak -b ${Blacklist} | awk '{if($0~"chr") print}' > ./macs3/narrow/${i}_rmBL.narrowPeak & 
     done
+
 
 ## fastqc  
 
