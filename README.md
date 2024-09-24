@@ -272,41 +272,20 @@ The black lists were downloaded from https://www.encodeproject.org/annotations/E
     --plot \
     --log-output-file a1_b1_overlaps.log
 
-### 2.intervene 计算peaks之间的overlaping  
+The output file format mimics the input file type, with some additional fields. Note that the **first 10 columns are a standard narrowPeak file**, pertaining to the merged peak across the two replicates. 
 
-    conda create -n intervene
-    conda activate intervene
-    conda install -c bioconda intervene
+**Column 5 contains the scaled IDR value, `min(int(log2(-125IDR), 1000)`** For example, peaks with an IDR of 0 have a score of 1000, peaks with an IDR of 0.05 have a score of int(-125log2(0.05)) = 540, and IDR of 1.0 has a score of 0.
 
-    nohup intervene venn  -i ../macs3/narrow/*.narrowPeak --save-overlaps &
-    nohup intervene upset -i ../m1/*_rmBL.narrowPeak --output ./ &
+**Columns 11 and 12 correspond to the local and global IDR value, respectively.** 
+* The **global IDR** is the value used to calculate the scaled IDR number in column 5, it _is analogous to a multiple hypothesis correction on a p-value to compute an FDR_. 
+* The **local IDR** is akin to the posterior probability of a peak belonging to the irreproducible noise component. You can read [this paper](http://projecteuclid.org/euclid.aoas/1318514284
+) for more details. 
 
-### 3.deeptools 计算peaks之间的overlaping和correlation  
+**Columns 13 through 16 correspond to Replicate 1 peak data** and **Columns 17 through 20 correspond to Replicate 2 peak data.**
 
-    conda create -n deeptools
-    conda activate deeptools
-    conda install -c bioconda deeptools
-    
-    nohup multiBamSummary bins --bamfiles bam/*last.bam --minMappingQuality 30 --labels BL6-TG15-ATAC-CT BL6-TG16-ATAC-CT BL6-TG-ATAC-C2 BL6-TG-ATAC-C4 BL6-TG-ATAC-C5 BL6-TG-ATAC-C6 -out readCounts.npz --outRawCounts readCounts.tab && 
+More detail on the output can be [found in the user manual](https://github.com/nboley/idr#output-file-format). Also, if you have any unanswered questions check out posts in the [Google groups forum](https://groups.google.com/forum/#!forum/idr-discuss).  
 
-    nohup plotCorrelation -in readCounts.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
-
-    vim g3_bam2bw.sh
-
-    #!/bin/bash
-    ## bam to bw ##
-
-    cat filenames | while read i; 
-    do
-    nohup bamCoverage --bam ./bam/${i}.last.bam -o ./bw/${i}.bw --binSize 10 --normalizeUsing RPKM & 
-    # nohup bamCoverage --bam ./bam/${i}.last.bam -o ./bw2/${i}.bw --binSize 10 --normalizeUsing RPGC --effectiveGenomeSize 2652783500 --ignoreForNormalization chrX --extendReads & 
-    done
-
-### 可视化  
-
-    nohup multiBigwigSummary bins -b *.bw -o test.npz && plotCorrelation -in test.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
-
-### 4.bedtools 计算peaks之间的overlaping，输出bed文件  
+### 2.bedtools 计算peaks之间的overlaping，输出bed文件  
 #### 具体参考 https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md
 
 - `-wo`: Write the original A (file 1) and B (file 2) entries plus the number of base pairs of overlap between the two features.  
@@ -330,6 +309,40 @@ bedtools intersect \
 > IDR analysis is extensively used by the ENCODE and modENCODE projects and is part of their ChIP-seq guidelines and standards. However, more recently there has been dicussion about the two approaches converging on similar results and so it remains to be seen what the gold standard will be.
 
 
+### 3.intervene 计算peaks之间的overlaping  
+
+    conda create -n intervene
+    conda activate intervene
+    conda install -c bioconda intervene
+
+    nohup intervene venn  -i ../macs3/narrow/*.narrowPeak --save-overlaps &
+    nohup intervene upset -i ../m1/*_rmBL.narrowPeak --output ./ &
+
+### 4.deeptools 计算peaks之间的overlaping和correlation  
+
+    conda create -n deeptools
+    conda activate deeptools
+    conda install -c bioconda deeptools
+    
+    nohup multiBamSummary bins --bamfiles bam/*last.bam --minMappingQuality 30 --labels BL6-TG15-ATAC-CT BL6-TG16-ATAC-CT BL6-TG-ATAC-C2 BL6-TG-ATAC-C4 BL6-TG-ATAC-C5 BL6-TG-ATAC-C6 -out readCounts.npz --outRawCounts readCounts.tab && 
+
+    nohup plotCorrelation -in readCounts.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
+
+    vim g3_bam2bw.sh
+
+    #!/bin/bash
+    ## bam to bw ##
+
+    cat filenames | while read i; 
+    do
+    nohup bamCoverage --bam ./bam/${i}.last.bam -o ./bw/${i}.bw --binSize 10 --normalizeUsing RPKM & 
+    # nohup bamCoverage --bam ./bam/${i}.last.bam -o ./bw2/${i}.bw --binSize 10 --normalizeUsing RPGC --effectiveGenomeSize 2652783500 --ignoreForNormalization chrX --extendReads & 
+    done
+
+### 可视化  
+
+    nohup multiBigwigSummary bins -b *.bw -o test.npz && plotCorrelation -in test.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
+    
 ## deeptools 计算bam PE FragmentSize 统计片段长度  
 
     nohup bamPEFragmentSize -hist fragmentSize_CTRL.png -T "Fragment size of CTRL" --maxFragmentLength 1000 \
