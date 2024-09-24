@@ -260,6 +260,7 @@ The black lists were downloaded from https://www.encodeproject.org/annotations/E
 ## 多种种方法计算peaks之间的重叠数量  
 
 ### 1.IDR 计算peaks之间的overlaping  
+#### 具体参考 https://github.com/hbctraining/Intro-to-ChIPseq/blob/master/lessons/07_handling-replicates-idr.md  
 
     conda create -n idr
     conda activate idr
