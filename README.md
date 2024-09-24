@@ -266,7 +266,7 @@ The black lists were downloaded from https://www.encodeproject.org/annotations/E
     conda activate idr
     conda install -c bioconda idr
 
-    idr --samples ../macs3/a1_peaks.narrowPeak ../macs3/b1_peaks.narrowPeak \
+    idr --samples ../macs3/a1_rep1_peaks.narrowPeak ../macs3/b1_rep2_peaks.narrowPeak \
     --input-file-type narrowPeak \
     --rank p.value \
     --output-file ./a1_b1_overlaps \
