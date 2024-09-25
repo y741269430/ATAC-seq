@@ -146,7 +146,10 @@
     done
 
 ## narrowPeak和bed文件格式   
-#### 具体参考https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/01_Introduction_to_peak_files.md   
+
+#### 具体参考   
+- https://macs3-project.github.io/MACS/docs/narrowPeak.html   
+- https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/01_Introduction_to_peak_files.md    
 
 - A narrowPeak (.narrowPeak) file is used by the ENCODE project to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data. The narrowPeak file is a BED6+4 format, which means the first 6 columns of a standard BED file with 4 additional fields:  
 ![image](https://github.com/y741269430/ATAC-seq/blob/main/img/narrowPeak.png)  
