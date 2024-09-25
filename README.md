@@ -4,7 +4,8 @@
 - https://yiweiniu.github.io/blog/2019/03/ATAC-seq-data-analysis-from-FASTQ-to-peaks/  
 - https://github.com/hbctraining/Intro-to-ChIPseq-flipped  
 - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8191135/
-- https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-1929-3  
+- https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-1929-3
+- https://nf-co.re/chipseq/2.0.0/  
 
 ## 0. 创建conda环境用于ATACseq分析（也可以用mamba）
 #### 我这里创建了多个环境，防止软件之间的冲突  
