@@ -76,10 +76,10 @@
 
     cat filenames | while read i; 
     do
-    nohup bowtie2 -p 4 --very-sensitive -X 2000 -k 10 \ 
-        -x ${mm39} \ 
-        -1 trim/${i}*_val_1.fq.gz \ 
-        -2 trim/${i}*_val_2.fq.gz \ 
+    nohup bowtie2 -p 4 --very-sensitive -X 2000 -k 10 \
+        -x ${mm39} \
+        -1 trim/${i}*_val_1.fq.gz \
+        -2 trim/${i}*_val_2.fq.gz \
         -S ./bam/${i}.sam 2> ./bam/${i}_map.txt & 
     done
 
@@ -243,15 +243,16 @@ The black lists were downloaded from https://www.encodeproject.org/annotations/E
 
     #!/bin/bash
     ## remove blacklist (bedtools) ##
-    Blacklist = "/home/jjyang/downloads/genome/mm39_GRCm39/ENCFF547MET.bed"
+    
+    Blacklist="/home/jjyang/downloads/genome/mm39_GRCm39/ENCFF547MET.bed"
     
     cat filenames | while read i; 
     do
-    nohup bedtools intersect \ 
-    -v \ 
-    -a ./macs3/${i}_peaks.narrowPeak \ 
-    -b ${Blacklist} | awk '{if($0~"chr") print}' \ 
-    > ./macs3/narrow/${i}_rmBL.narrowPeak & 
+    nohup bedtools intersect \
+    -v \
+    -a ./macs3/${i}_peaks.narrowPeak \
+    -b ${Blacklist} | awk '{if($0~"chr") print}' \
+    > ./macs3/narrow/${i}_rmBL.narrowPeak &
     done
 
 
