@@ -22,7 +22,7 @@
  
 
 ## 0. 创建conda环境用于ATACseq分析（也可以用mamba）
-#### 我这里创建了多个环境，防止软件之间的冲突  
+我这里创建了多个环境，防止软件之间的冲突   
 
     # 1
     conda create -n atac
@@ -164,7 +164,7 @@
 
 ## narrowPeak和bed文件格式   
 
-#### 具体参考   
+具体参考   
 - https://macs3-project.github.io/MACS/docs/narrowPeak.html   
 - https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/01_Introduction_to_peak_files.md    
 
@@ -225,7 +225,7 @@ macs3 bdgcmp -t  ./macs3/${i}_treat_pileup.bdg -c ./macs3/${i}_control_lambda.bd
 done
 ```
 
-# Fix the bedGraph and convert them to bigWig files. (And you will have these bigwig files)   
+Fix the bedGraph and convert them to bigWig files. (And you will have these bigwig files)    
 ```
 vim atac6.sh
 #!/bin/bash
@@ -264,11 +264,13 @@ nohup bash atac6.sh ./macs3/${i}_FE.bdg /home/jjyang/downloads/genome/mm39_GRCm3
 done  
 ```
 
-最后运行以下脚本即可  
+最后运行以下脚本即可   
+
     bash atac7.sh
 
 ## Remove blacklist  
-#### 具体参考 https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md  
+具体参考  
+- https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md   
 
 > **How were the 'blacklists compiled?** These blacklists were empirically derived from large compendia of data using a combination of automated heuristics and manual curation. Blacklists were generated for various species and genome versions including human, mouse, worm and fly. The lists can be [downloaded here](http://mitra.stanford.edu/kundaje/akundaje/release/blacklists/). For human, they used 80 open chromatin tracks (DNase and FAIRE datasets) and 12 ChIP-seq input/control tracks spanning ~60 cell lines in total. These blacklists are applicable to functional genomic data based on short-read sequencing (20-100bp reads). These are not directly applicable to RNA-seq or any other transcriptome data types.
 > 
@@ -293,7 +295,7 @@ The black lists were downloaded from https://www.encodeproject.org/annotations/E
     done
 
 
-## fastqc  
+## fastqc质控  
 
     nohup fastqc -q -t 30 raw/*.fq.gz -o fqc/ &
     nohup fastqc -q -t 30 trim/*.fq.gz -o trim_fqc/ &
@@ -304,7 +306,8 @@ The black lists were downloaded from https://www.encodeproject.org/annotations/E
 ## 多种种方法计算peaks之间的重叠数量  
 
 ### 1.IDR 计算peaks之间的overlaping  
-#### 具体参考 https://github.com/hbctraining/Intro-to-ChIPseq/blob/master/lessons/07_handling-replicates-idr.md  
+具体参考  
+- https://github.com/hbctraining/Intro-to-ChIPseq/blob/master/lessons/07_handling-replicates-idr.md  
 
     conda create -n idr
     conda activate idr
@@ -330,8 +333,9 @@ The output file format mimics the input file type, with some additional fields. 
 
 More detail on the output can be [found in the user manual](https://github.com/nboley/idr#output-file-format). Also, if you have any unanswered questions check out posts in the [Google groups forum](https://groups.google.com/forum/#!forum/idr-discuss).  
 
-### 2.bedtools 计算peaks之间的overlaping，输出bed文件  
-#### 具体参考 https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md
+### 2.bedtools 计算peaks之间的overlaping，输出bed文件   
+具体参考   
+- https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md
 
 - `-wo`: Write the original A (file 1) and B (file 2) entries plus the number of base pairs of overlap between the two features.  
 - `-f`: Minimum overlap required as a fraction of A. The value ranges from 0 to 1. We will use 0.3, requiring the overlap region being at least 30% of A.  
