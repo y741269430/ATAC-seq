@@ -254,13 +254,13 @@ if [ $# -lt 2 ];then
      
      rm -f ${F}.clip ${F}.sort.clip
     
-```
+```  
 vim atac7.sh
 #!/bin/bash
 cat filenames | while read i; 
 do
 nohup bash atac6.sh ./macs3/${i}_FE.bdg /home/jjyang/downloads/genome/mm39_GRCm39/ucsc_fa/mm10.chrom.sizes &
-done
+done  
 ```
 
 最后运行以下脚本即可  
