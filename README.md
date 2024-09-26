@@ -123,48 +123,50 @@ done
 # samtools flagstat -@ 10 ./bam/${i}-sorted-pos.bam > ./bam/${i}-sam.stat &
 ```
 
-
 ## 5. sam to bam 同时去除 ChrM   
+```bash
+vim atac2_sam2lastbam.sh
 
-    vim atac2_sam2lastbam.sh
+#!/bin/bash
+## sam to bam (samtools) ##
+## remove ChrM & sorted by position (samtools) ##
+## remove duplication (sambamba) ##
 
-    #!/bin/bash
-    ## sam to bam (samtools) ##
-    ## remove ChrM & sorted by position (samtools) ##
-    ## remove duplication (sambamba) ##
+cat filenames | while read i; 
+do
+nohup samtools view -@ 4 -h ./bam/${i}.sam | grep -v chrM | samtools sort -@ 4 -O bam -o ./bam/${i}-rmChrM-sorted-pos.bam && 
+sambamba markdup -r -t 40 --overflow-list-size 600000 ./bam/${i}-rmChrM-sorted-pos.bam ./bam/${i}.last.bam & 
+done
 
-    cat filenames | while read i; 
-    do
-    nohup samtools view -@ 4 -h ./bam/${i}.sam | grep -v chrM | samtools sort -@ 4 -O bam -o ./bam/${i}-rmChrM-sorted-pos.bam && 
-    sambamba markdup -r -t 40 --overflow-list-size 600000 ./bam/${i}-rmChrM-sorted-pos.bam ./bam/${i}.last.bam & 
-    done
+# samtools flagstat -@ 10 ./bam/${i}-rmChrM-sorted-pos.bam > ./bam/${i}-rmChrM-sorted-pos.stat &
+# samtools flagstat -@ 10 ./bam/${i}.last.bam > ./bam/${i}.last.stat &
+```
 
-    # samtools flagstat -@ 10 ./bam/${i}-rmChrM-sorted-pos.bam > ./bam/${i}-rmChrM-sorted-pos.stat &
-    # samtools flagstat -@ 10 ./bam/${i}.last.bam > ./bam/${i}.last.stat &
+## 6. macs2（现已弃用）  
+```bash
+vim atac3_macs2.sh
 
-## 6. macs2（现已弃用）
+#!/bin/bash
+## peak calling (macs2) ##
 
-    vim atac3_macs2.sh
-
-    #!/bin/bash
-    ## peak calling (macs2) ##
-
-    cat filenames | while read i; 
-    do
-    nohup macs2 callpeak -t ./bam/${i}.last.bam -g mm --nomodel --shift -75 --extsize 150  -n ./macs2/${i} -q 0.1 --keep-dup all &  
-    done
+cat filenames | while read i; 
+do
+nohup macs2 callpeak -t ./bam/${i}.last.bam -g mm --nomodel --shift -75 --extsize 150  -n ./macs2/${i} -q 0.1 --keep-dup all &  
+done
+```
     
-## 7. 使用macs3进行call peak 
+## 7. 使用macs3进行call peak   
+```bash
+vim atac4_macs3.sh
 
-    vim atac4_macs3.sh
+#!/bin/bash
+## peak calling (macs3) ##
 
-    #!/bin/bash
-    ## peak calling (macs3) ##
-
-    cat filenames | while read i; 
-    do
-    nohup macs3 callpeak -f BAMPE -t ./bam/${i}.last.bam -g mm -n ./macs3/${i} -B -q 0.1 &  
-    done
+cat filenames | while read i; 
+do
+nohup macs3 callpeak -f BAMPE -t ./bam/${i}.last.bam -g mm -n ./macs3/${i} -B -q 0.1 &  
+done
+```
 
 ## narrowPeak和bed文件格式   
 
@@ -190,19 +192,19 @@ done
 - chromInfo.txt  https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/chromInfo.txt.gz
 
 首先下载两个脚本：bedGraphToBigWig 和 bedClip
-```
+```bash
 wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig
 wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedClip  
 ```
     
 赋予可执行权限  
-```
+```bash
 chmod +x bedGraphToBigWig
 chmod +x bedClip
 ```
     
 添加到环境变量中（打开bashrc，添加到最后一行，保存，source）  
-```
+```bash
 vim ~/.bashrc
 export PATH="$PATH:/home/jjyang/downloads/bedClip"
 export PATH="$PATH:/home/jjyang/downloads/bedGraphToBigWig"
@@ -217,7 +219,7 @@ source ~/.bashrc
 - `-p`: 设置伪计数。这个数值将被加到“每百万读段的堆积”值上。在生成倍增富集轨迹时，您不需要它，因为对照组的 lambda 值将总是大于 0。但在计算对数似然比时，为了避免出现 `log(0)` 的情况，我们会添加伪计数。因为我将精度设置为五位小数，所以这里我使用 `0.00001`。  
 
 Run MACS2 bdgcmp to generate fold-enrichment and logLR track (Then you will have this bedGraph file for fold-enrichment(FE) and logLR)   
-```
+```bash
 vim atac5_bdgcmp.sh
 #!/bin/bash
 ## peak calling (macs3) ##
@@ -230,7 +232,7 @@ done
 ```
 
 Fix the bedGraph and convert them to bigWig files. (And you will have these bigwig files)    
-```
+```bash
 vim atac6.sh
 #!/bin/bash
 
@@ -259,7 +261,7 @@ if [ $# -lt 2 ];then
      rm -f ${F}.clip ${F}.sort.clip
 ```
 
-```  
+```bash 
 vim atac7.sh
 #!/bin/bash
 cat filenames | while read i; 
@@ -269,8 +271,9 @@ done
 ```
 
 最后运行以下脚本即可   
-
-    bash atac7.sh
+```bash 
+bash atac7.sh
+```
 
 ## Remove blacklist  
 具体参考  
@@ -282,30 +285,32 @@ done
 
 The black lists were downloaded from https://www.encodeproject.org/annotations/ENCSR636HFF/   
 
-    vim atac4_rmblackls.sh
+```bash 
+vim atac4_rmblackls.sh
 
-    #!/bin/bash
-    ## remove blacklist (bedtools) ##
-    
-    Blacklist="/home/jjyang/downloads/genome/mm39_GRCm39/ENCFF547MET.bed"
-    
-    cat filenames | while read i; 
-    do
-    nohup bedtools intersect \
-    -v \
-    -a ./macs3/${i}_peaks.narrowPeak \
-    -b ${Blacklist} | awk '{if($0~"chr") print}' \
-    > ./macs3/narrow/${i}_rmBL.narrowPeak &
-    done
+#!/bin/bash
+## remove blacklist (bedtools) ##
 
+Blacklist="/home/jjyang/downloads/genome/mm39_GRCm39/ENCFF547MET.bed"
+
+cat filenames | while read i; 
+do
+nohup bedtools intersect \
+-v \
+-a ./macs3/${i}_peaks.narrowPeak \
+-b ${Blacklist} | awk '{if($0~"chr") print}' \
+> ./macs3/narrow/${i}_rmBL.narrowPeak &
+done
+```
 
 ## fastqc质控  
+```bash
+nohup fastqc -q -t 30 raw/*.fq.gz -o fqc/ &
+nohup fastqc -q -t 30 trim/*.fq.gz -o trim_fqc/ &
 
-    nohup fastqc -q -t 30 raw/*.fq.gz -o fqc/ &
-    nohup fastqc -q -t 30 trim/*.fq.gz -o trim_fqc/ &
-
-    nohup multiqc fqc/*.zip -o mqc/ &
-    nohup multiqc trim_fqc/*.zip -o trim_mqc/ &
+nohup multiqc fqc/*.zip -o mqc/ &
+nohup multiqc trim_fqc/*.zip -o trim_mqc/ &
+```
 
 ## 多种种方法计算peaks之间的重叠数量  
 
@@ -313,16 +318,18 @@ The black lists were downloaded from https://www.encodeproject.org/annotations/E
 具体参考  
 - https://github.com/hbctraining/Intro-to-ChIPseq/blob/master/lessons/07_handling-replicates-idr.md  
 
-    conda create -n idr
-    conda activate idr
-    conda install -c bioconda idr
+```bash
+conda create -n idr
+conda activate idr
+conda install -c bioconda idr
 
-    idr --samples ../macs3/a1_rep1_peaks.narrowPeak ../macs3/b1_rep2_peaks.narrowPeak \
-    --input-file-type narrowPeak \
-    --rank p.value \
-    --output-file ./a1_b1_overlaps \
-    --plot \
-    --log-output-file a1_b1_overlaps.log
+idr --samples ../macs3/a1_rep1_peaks.narrowPeak ../macs3/b1_rep2_peaks.narrowPeak \
+--input-file-type narrowPeak \
+--rank p.value \
+--output-file ./a1_b1_overlaps \
+--plot \
+--log-output-file a1_b1_overlaps.log
+```
 
 The output file format mimics the input file type, with some additional fields. Note that the **first 10 columns are a standard narrowPeak file**, pertaining to the merged peak across the two replicates. 
 
@@ -345,7 +352,7 @@ More detail on the output can be [found in the user manual](https://github.com/n
 - `-f`: Minimum overlap required as a fraction of A. The value ranges from 0 to 1. We will use 0.3, requiring the overlap region being at least 30% of A.  
 - `-r`: Require that the fraction overlap be reciprocal for A and B. Together with the `-f` flag above, we require the overlap region being at least 30% of B as well.
 
-```
+```bash
 bedtools intersect \
 -wo -f 0.3 -r \
 -a ../macs3/a1_peaks.narrowPeak \
@@ -363,56 +370,62 @@ bedtools intersect \
 
 
 ### 3.intervene 计算peaks之间的overlaping  
+```bash
+conda create -n intervene
+conda activate intervene
+conda install -c bioconda intervene
 
-    conda create -n intervene
-    conda activate intervene
-    conda install -c bioconda intervene
-
-    nohup intervene venn  -i ../macs3/narrow/*.narrowPeak --save-overlaps &
-    nohup intervene upset -i ../m1/*_rmBL.narrowPeak --output ./ &
+nohup intervene venn  -i ../macs3/narrow/*.narrowPeak --save-overlaps &
+nohup intervene upset -i ../m1/*_rmBL.narrowPeak --output ./ &
+```
 
 ### 4.deeptools 计算peaks之间的overlaping和correlation  
+```bash
+conda create -n deeptools
+conda activate deeptools
+conda install -c bioconda deeptools
 
-    conda create -n deeptools
-    conda activate deeptools
-    conda install -c bioconda deeptools
-    
-    nohup multiBamSummary bins --bamfiles bam/*last.bam --minMappingQuality 30 --labels BL6-TG15-ATAC-CT BL6-TG16-ATAC-CT BL6-TG-ATAC-C2 BL6-TG-ATAC-C4 BL6-TG-ATAC-C5 BL6-TG-ATAC-C6 -out readCounts.npz --outRawCounts readCounts.tab && 
+nohup multiBamSummary bins --bamfiles bam/*last.bam --minMappingQuality 30 --labels BL6-TG15-ATAC-CT BL6-TG16-ATAC-CT BL6-TG-ATAC-C2 BL6-TG-ATAC-C4 BL6-TG-ATAC-C5 BL6-TG-ATAC-C6 -out readCounts.npz --outRawCounts readCounts.tab && 
+  
+nohup plotCorrelation -in readCounts.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
+```
 
-    nohup plotCorrelation -in readCounts.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
+### 使用deeptools 将bam转为bw（用于igv可视化）  
+```bash
+vim g3_bam2bw.sh
 
-    vim g3_bam2bw.sh
+#!/bin/bash
+## bam to bw ##
 
-    #!/bin/bash
-    ## bam to bw ##
-
-    cat filenames | while read i; 
-    do
-    nohup bamCoverage --bam ./bam/${i}.last.bam -o ./bw/${i}.bw --binSize 10 --normalizeUsing RPKM & 
-    # nohup bamCoverage --bam ./bam/${i}.last.bam -o ./bw2/${i}.bw --binSize 10 --normalizeUsing RPGC --effectiveGenomeSize 2652783500 --ignoreForNormalization chrX --extendReads & 
-    done
+cat filenames | while read i; 
+do
+nohup bamCoverage --bam ./bam/${i}.last.bam -o ./bw/${i}.bw --binSize 10 --normalizeUsing RPKM & 
+# nohup bamCoverage --bam ./bam/${i}.last.bam -o ./bw2/${i}.bw --binSize 10 --normalizeUsing RPGC --effectiveGenomeSize 2652783500 --ignoreForNormalization chrX --extendReads & 
+done
+```
 
 ### 可视化  
-
-    nohup multiBigwigSummary bins -b *.bw -o test.npz && plotCorrelation -in test.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
+```bash
+nohup multiBigwigSummary bins -b *.bw -o test.npz && plotCorrelation -in test.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
+```
     
 ## deeptools 计算bam PE FragmentSize 统计片段长度  
-
-    nohup bamPEFragmentSize -hist fragmentSize_CTRL.png -T "Fragment size of CTRL" --maxFragmentLength 1000 \
-    -b bam/BL6-TG-ATAC-C2.last.bam bam/BL6-TG-ATAC-C4.last.bam bam/BL6-TG-ATAC-C5.last.bam bam/BL6-TG-ATAC-C6.last.bam bam/BL6-TG-ATAC-C7.last.bam bam/BL6-TG-ATAC-C8.last.bam bam/BL6-TG-ATAC-C9.last.bam \
-    --samplesLabel C2 C4 C5 C6 C7 C8 C9 &
-    
-    nohup bamPEFragmentSize -hist fragmentSize_CFA.png -T "Fragment size of CFA" --maxFragmentLength 1000 \
-    -b bam/BL6-TG1-ATAC-CFA3.last.bam bam/BL6-TG2-ATAC-CFA3.last.bam bam/BL6-TG-ATAC-CFA3_1.last.bam bam/BL6-TG-ATAC-CFA3_3.last.bam bam/BL6-TG-ATAC-CFA3_4.last.bam \
-    --samplesLabel TG1-cfa3 TG2-cfa3 cfa31 cfa33 cfa34 &
-    
-    nohup bamPEFragmentSize -hist fragmentSize_IoN.png -T "Fragment size of IoN" --maxFragmentLength 1000 \
-    -b bam/BL6-TG1-ATAC-ION7.last.bam bam/BL6-TG2-ATAC-ION7.last.bam bam/BL6-TG3-ATAC-ION7.last.bam bam/BL6-TG4-ATAC-ION7.last.bam \
-    --samplesLabel ion1 ion2 ion3 ion4 &
-
+```bash
+nohup bamPEFragmentSize -hist fragmentSize_CTRL.png -T "Fragment size of CTRL" --maxFragmentLength 1000 \
+-b bam/BL6-TG-ATAC-C2.last.bam bam/BL6-TG-ATAC-C4.last.bam bam/BL6-TG-ATAC-C5.last.bam bam/BL6-TG-ATAC-C6.last.bam bam/BL6-TG-ATAC-C7.last.bam bam/BL6-TG-ATAC-C8.last.bam bam/BL6-TG-ATAC-C9.last.bam \
+--samplesLabel C2 C4 C5 C6 C7 C8 C9 &
+  
+  nohup bamPEFragmentSize -hist fragmentSize_CFA.png -T "Fragment size of CFA" --maxFragmentLength 1000 \
+-b bam/BL6-TG1-ATAC-CFA3.last.bam bam/BL6-TG2-ATAC-CFA3.last.bam bam/BL6-TG-ATAC-CFA3_1.last.bam bam/BL6-TG-ATAC-CFA3_3.last.bam bam/BL6-TG-ATAC-CFA3_4.last.bam \
+--samplesLabel TG1-cfa3 TG2-cfa3 cfa31 cfa33 cfa34 &
+  
+  nohup bamPEFragmentSize -hist fragmentSize_IoN.png -T "Fragment size of IoN" --maxFragmentLength 1000 \
+-b bam/BL6-TG1-ATAC-ION7.last.bam bam/BL6-TG2-ATAC-ION7.last.bam bam/BL6-TG3-ATAC-ION7.last.bam bam/BL6-TG4-ATAC-ION7.last.bam \
+--samplesLabel ion1 ion2 ion3 ion4 &
+```
 
 ## louvain 聚类  
-
-    conda activate atac
-
-    python ./louvain.py net_drg_select.csv net_drg_select.gexf 1 &
+```bash
+conda activate atac
+python ./louvain.py net_drg_select.csv net_drg_select.gexf 1 &
+```
