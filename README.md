@@ -7,6 +7,20 @@
 - https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-1929-3
 - https://nf-co.re/chipseq/2.0.0/  
 
+## 目录 ####
+- 0. 创建conda环境用于ATACseq分析
+- 0. 利用bowtie2构建小鼠基因组（mm39）索引
+- 1.开始——激活conda环境
+- 2. 利用Trim adaptors去除接头
+- 3. 比对到mm39
+- 4. 生成raw bam (optional)  
+- 5. sam to bam 同时去除 ChrM
+- 6. macs2（现已弃用）
+- 7. 使用macs3进行call peak
+- narrowPeak和bed文件格式 
+- 8. macs3 peak文件转 bw（用于igv可视化）
+ 
+
 ## 0. 创建conda环境用于ATACseq分析（也可以用mamba）
 #### 我这里创建了多个环境，防止软件之间的冲突  
 
@@ -40,17 +54,19 @@
     nohup bowtie2-build GRCm38.primary_assembly.genome.fa \ 
     /home/jjyang/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39 & 
 
-## 1.激活环境并创建文件夹   
+## 1.开始——激活conda环境
+
+创建文件夹   
     
     conda activate atac  
     
     mkdir -p raw clean trim bam macs2 macs2/narrow macs3 macs3/narrow  
     
-## 2. 生成一个filenames的文件，用来记录输出的文件名称（样本名称），例如：  
+生成一个filenames的文件，用来记录输出的文件名称（样本名称），例如：  
 
     ls raw/*1.fq.gz |cut -d "_" -f 1 |cut -d "/" -f 2 > filenames
 
-## 3. 利用Trim adaptors去除接头
+## 2. 利用Trim adaptors去除接头
 
     vim pre_trim.sh
 
@@ -66,7 +82,7 @@
     # nohup trim_galore -q 25 --phred33 --length 20 -e 0. 1 --stringency 1 ./raw/${i}*_1.fq.gz -o ./trim &
     done
 
-## 4. 比对到mm39中  
+## 3. 比对到mm39 
 
     vim atac1_bw2.sh
 
@@ -84,7 +100,7 @@
         -S ./bam/${i}.sam 2> ./bam/${i}_map.txt & 
     done
 
-## 生成raw bam (optional) 
+## 4. 生成raw bam (optional) 
 
     vim atac2_sam2bamop.sh
 
@@ -104,7 +120,7 @@
     # samtools flagstat -@ 10 ./bam/${i}-sorted-pos.bam > ./bam/${i}-sam.stat &
 
 
-## 5. sam to bam and remove ChrM    
+## 5. sam to bam 同时去除 ChrM   
 
     vim atac2_sam2lastbam.sh
 
@@ -163,30 +179,34 @@
 ---
 
 ## 8. macs3 peak文件转 bw（用于igv可视化） 
-#### 参考：  
+参考：  
 - Build Signal Track https://github.com/macs3-project/MACS/wiki/Build-Signal-Track  
 - bedGraph to bigWig https://gist.github.com/taoliu/2469050  
 - bedGraphToBigWig: error while loading shared libraries: libssl.so.1.0.0: cannot open shared object file: No such file or directory https://github.com/macs3-project/MACS/issues/505  
-- chromInfo.txt  https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/chromInfo.txt.gz  
-### 首先下载两个脚本：bedGraphToBigWig 和 bedClip
+- chromInfo.txt  https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/chromInfo.txt.gz
+
+首先下载两个脚本：bedGraphToBigWig 和 bedClip
     wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig
-    wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedClip
-### 赋予可执行权限  
+    wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedClip  
+    
+赋予可执行权限  
     chmod +x bedGraphToBigWig
     chmod +x bedClip
-### 添加到环境变量中（打开bashrc，添加到最后一行，保存，source）  
+    
+添加到环境变量中（打开bashrc，添加到最后一行，保存，source）  
     vim ~/.bashrc
     export PATH="$PATH:/home/jjyang/downloads/bedClip"
     export PATH="$PATH:/home/jjyang/downloads/bedGraphToBigWig"
     source ~/.bashrc
     
-### 执行以下脚本
+执行以下脚本  
+
 - `-m`: FE means to calculate fold enrichment. Other options can be logLR for log likelihood, subtract for subtracting noise from treatment sample.  
 - `-m`: FE` 表示计算倍增富集。其他选项可以是 `logLR` 计算对数似然比，`subtract` 用于从处理样本中减去噪声。  
 - `-p`: sets pseudocount. This number will be added to 'pileup per million reads' value. You don't need it while generating fold enrichment track because control lambda will always >0. But in order to avoid log(0) while calculating log likelihood, we'd add pseudocount. Because I set precision as 5 decimals, here I use 0.00001.  
 - `-p`: 设置伪计数。这个数值将被加到“每百万读段的堆积”值上。在生成倍增富集轨迹时，您不需要它，因为对照组的 lambda 值将总是大于 0。但在计算对数似然比时，为了避免出现 `log(0)` 的情况，我们会添加伪计数。因为我将精度设置为五位小数，所以这里我使用 `0.00001`。  
 
-### Run MACS2 bdgcmp to generate fold-enrichment and logLR track (Then you will have this bedGraph file for fold-enrichment(FE) and logLR)  
+Run MACS2 bdgcmp to generate fold-enrichment and logLR track (Then you will have this bedGraph file for fold-enrichment(FE) and logLR)   
     vim atac5_bdgcmp.sh
     #!/bin/bash
     ## peak calling (macs3) ##
@@ -196,7 +216,7 @@
     nohup macs3 bdgcmp -t ./macs3/${i}_treat_pileup.bdg -c ./macs3/${i}_control_lambda.bdg -o ./macs3/${i}_FE.bdg -m FE &&
     macs3 bdgcmp -t  ./macs3/${i}_treat_pileup.bdg -c ./macs3/${i}_control_lambda.bdg -o ./macs3/${i}_logLR.bdg -m logLR -p 0.00001 &
     done  
-### Fix the bedGraph and convert them to bigWig files. (And you will have these bigwig files)
+Fix the bedGraph and convert them to bigWig files. (And you will have these bigwig files)   
     vim atac6.sh
     #!/bin/bash
     
@@ -223,6 +243,7 @@
     /home/jjyang/downloads/bedGraphToBigWig ${F}.sort.clip ${G} ${F/bdg/bw}
     
     rm -f ${F}.clip ${F}.sort.clip
+    
 ```
 vim atac7.sh
 #!/bin/bash
@@ -231,7 +252,8 @@ do
 nohup bash atac6.sh ./macs3/${i}_FE.bdg /home/jjyang/downloads/genome/mm39_GRCm39/ucsc_fa/mm10.chrom.sizes &
 done
 ```
-### And then run
+
+最后运行以下脚本即可  
     bash atac7.sh
 
 ## Remove blacklist  
