@@ -5,7 +5,8 @@
 - https://github.com/hbctraining/Intro-to-ChIPseq-flipped  
 - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8191135/
 - https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-1929-3
-- https://nf-co.re/chipseq/2.0.0/  
+- https://nf-co.re/chipseq/2.0.0/
+- https://github.com/Zhang-lab/ATAC-seq_QC_analysis
 
 ## 目录 ####
 - 0.创建conda环境用于ATACseq分析（也可以用mamba）
