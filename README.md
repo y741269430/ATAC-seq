@@ -253,7 +253,8 @@ if [ $# -lt 2 ];then
      /home/jjyang/downloads/bedGraphToBigWig ${F}.sort.clip ${G} ${F/bdg/bw}
      
      rm -f ${F}.clip ${F}.sort.clip
-    
+```
+
 ```  
 vim atac7.sh
 #!/bin/bash
