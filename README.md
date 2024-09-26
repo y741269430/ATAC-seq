@@ -8,17 +8,22 @@
 - https://nf-co.re/chipseq/2.0.0/  
 
 ## 目录 ####
-- 创建conda环境用于ATACseq分析  
-- 利用bowtie2构建小鼠基因组（mm39）索引
+- 0. 创建conda环境用于ATACseq分析（也可以用mamba）
+- 0. 利用bowtie2构建小鼠基因组（mm39）索引（构建一次以后都不用做了）  
 - 1.开始——激活conda环境
-- 2.利用Trim adaptors去除接头
-- 3.比对到mm39  
-- 4.生成raw bam (optional)    
-- 5.sam to bam 同时去除 ChrM  
-- 6.macs2（现已弃用）  
-- 7.使用macs3进行call peak  
+- 2. 利用Trim adaptors去除接头
+- 3. 比对到mm39 
+- 4. 生成raw bam (optional) 
+- 5. sam to bam 同时去除 ChrM   
+- 6. macs2（现已弃用）  
+- 7. 使用macs3进行call peak   
 - narrowPeak和bed文件格式   
-- 8.macs3 peak文件转 bw（用于igv可视化）  
+- 8. macs3 peak文件转 bw（用于igv可视化） 
+- Remove blacklist  
+- fastqc质控  
+- 9.多种种方法计算peaks之间的重叠数量  
+- 使用deeptools 将bam转为bw（用于igv可视化）
+- louvain 聚类  
  
 
 ## 0. 创建conda环境用于ATACseq分析（也可以用mamba）
@@ -312,7 +317,7 @@ nohup multiqc fqc/*.zip -o mqc/ &
 nohup multiqc trim_fqc/*.zip -o trim_mqc/ &
 ```
 
-## 多种种方法计算peaks之间的重叠数量  
+## 9.多种种方法计算peaks之间的重叠数量  
 
 ### 1.IDR 计算peaks之间的overlaping  
 具体参考  
@@ -390,7 +395,7 @@ nohup multiBamSummary bins --bamfiles bam/*last.bam --minMappingQuality 30 --lab
 nohup plotCorrelation -in readCounts.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
 ```
 
-### 使用deeptools 将bam转为bw（用于igv可视化）  
+### 使用deeptools 将bam转为bw（用于igv可视化）
 ```bash
 vim g3_bam2bw.sh
 
@@ -409,7 +414,7 @@ done
 nohup multiBigwigSummary bins -b *.bw -o test.npz && plotCorrelation -in test.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
 ```
     
-## deeptools 计算bam PE FragmentSize 统计片段长度  
+### deeptools 计算bam PE FragmentSize 统计片段长度  
 ```bash
 nohup bamPEFragmentSize -hist fragmentSize_CTRL.png -T "Fragment size of CTRL" --maxFragmentLength 1000 \
 -b bam/BL6-TG-ATAC-C2.last.bam bam/BL6-TG-ATAC-C4.last.bam bam/BL6-TG-ATAC-C5.last.bam bam/BL6-TG-ATAC-C6.last.bam bam/BL6-TG-ATAC-C7.last.bam bam/BL6-TG-ATAC-C8.last.bam bam/BL6-TG-ATAC-C9.last.bam \
