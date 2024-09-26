@@ -24,100 +24,104 @@
 ## 0. 创建conda环境用于ATACseq分析（也可以用mamba）
 我这里创建了多个环境，防止软件之间的冲突   
 
-    # 1
-    conda create -n atac
-    conda activate atac
-    conda install -c bioconda trim-galore 
-    conda install -c bioconda bowtie2 
-    conda install -c bioconda macs2
-    conda install -c bioconda samtools
-    conda install -c bioconda sambamba
-    conda install -c bioconda bedtools
-    conda install -c bioconda picard
-    # 2
-    conda create -n macs3 python=3.8
-    conda activate macs3
-    conda install -c maximinio macs3
-    conda install -c bioconda bedtools
-    # 3
-    conda create -n mqc python=3.6
-    conda activate mqc
-    pip install multiqc
-    # 4
-    。。。
-    
+```bash
+# 1
+conda create -n atac
+conda activate atac
+conda install -c bioconda trim-galore 
+conda install -c bioconda bowtie2 
+conda install -c bioconda macs2
+conda install -c bioconda samtools
+conda install -c bioconda sambamba
+conda install -c bioconda bedtools
+conda install -c bioconda picard
+# 2
+conda create -n macs3 python=3.8
+conda activate macs3
+conda install -c maximinio macs3
+conda install -c bioconda bedtools
+# 3
+conda create -n mqc python=3.6
+conda activate mqc
+pip install multiqc
+# 4
+```
 ## 0. 利用bowtie2构建小鼠基因组（mm39）索引（构建一次以后都不用做了）  
 
-    conda activate atac  
-    cd /home/jjyang/downloads/genome/mm39_GRCm39/ucsc_fa/
-    
-    nohup bowtie2-build GRCm38.primary_assembly.genome.fa \ 
-    /home/jjyang/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39 & 
+```bash
+conda activate atac  
+cd /home/jjyang/downloads/genome/mm39_GRCm39/ucsc_fa/  
+nohup bowtie2-build GRCm38.primary_assembly.genome.fa /home/jjyang/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39 &
+```
 
 ## 1.开始——激活conda环境
 
 创建文件夹   
-    
-    conda activate atac  
-    
-    mkdir -p raw clean trim bam macs2 macs2/narrow macs3 macs3/narrow  
+```bash
+conda activate atac  
+mkdir -p raw clean trim bam macs2 macs2/narrow macs3 macs3/narrow
+```
     
 生成一个filenames的文件，用来记录输出的文件名称（样本名称），例如：  
-
-    ls raw/*1.fq.gz |cut -d "_" -f 1 |cut -d "/" -f 2 > filenames
+```bash
+ls raw/*1.fq.gz |cut -d "_" -f 1 |cut -d "/" -f 2 > filenames
+```
 
 ## 2. 利用Trim adaptors去除接头
+```bash
+vim pre_trim.sh
 
-    vim pre_trim.sh
+#!/bin/bash
+## trim_galore ##
 
-    #!/bin/bash
-    ## trim_galore ##
-
-    cat filenames | while read i; 
-    do
-    # paired end
-    nohup trim_galore -q 25 --phred33 --length 20 -e 0.1 --stringency 1 --paired ./raw/${i}*_1.fq.gz ./raw/${i}*_2.fq.gz -o ./trim &
-
-    # single end
-    # nohup trim_galore -q 25 --phred33 --length 20 -e 0. 1 --stringency 1 ./raw/${i}*_1.fq.gz -o ./trim &
-    done
+cat filenames | while read i; 
+do
+# paired end
+nohup trim_galore -q 25 --phred33 --length 20 -e 0.1 --stringency 1 --paired ./raw/${i}*_1.fq.gz ./raw/${i}*_2.fq.gz -o ./trim &
+  
+# single end
+# nohup trim_galore -q 25 --phred33 --length 20 -e 0. 1 --stringency 1 ./raw/${i}*_1.fq.gz -o ./trim &
+done
+```
 
 ## 3. 比对到mm39 
+```bash
+vim atac1_bw2.sh
 
-    vim atac1_bw2.sh
+#!/bin/bash
+## Alignment to mm39 ##
 
-    #!/bin/bash
-    ## Alignment to mm39 ##
+mm39="/home/jjyang/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39"
 
-    mm39="/home/jjyang/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39"
-
-    cat filenames | while read i; 
-    do
-    nohup bowtie2 -p 4 --very-sensitive -X 2000 -k 10 \
-        -x ${mm39} \
-        -1 trim/${i}*_val_1.fq.gz \
-        -2 trim/${i}*_val_2.fq.gz \
-        -S ./bam/${i}.sam 2> ./bam/${i}_map.txt & 
-    done
+cat filenames | while read i; 
+do
+nohup bowtie2 -p 4 --very-sensitive -X 2000 -k 10 \
+-x ${mm39} \
+-1 trim/${i}*_val_1.fq.gz \
+-2 trim/${i}*_val_2.fq.gz \
+-S ./bam/${i}.sam 2> ./bam/${i}_map.txt & 
+done
+```
 
 ## 4. 生成raw bam (optional) 
+```bash
+vim atac2_sam2bamop.sh
 
-    vim atac2_sam2bamop.sh
+#!/bin/bash
+## sam to bam (samtools) ##
+## sorted by position (samtools) ##
 
-    #!/bin/bash
-    ## sam to bam (samtools) ##
-    ## sorted by position (samtools) ##
+cat filenames | while read i; 
+do
+nohup samtools view -@ 4 -h ./bam/${i}.sam | samtools sort -@ 4 -O bam -o ./bam/${i}-sorted-pos.bam &&
+samtools index -@ 4 ./bam/${i}-sorted-pos.bam & 
+done
 
-    cat filenames | while read i; 
-    do
-    nohup samtools view -@ 4 -h ./bam/${i}.sam | samtools sort -@ 4 -O bam -o ./bam/${i}-sorted-pos.bam &&
-    samtools index -@ 4 ./bam/${i}-sorted-pos.bam & 
-    done
-
-    # mtReads=$(samtools idxstats ./bam/${i}-sorted-pos.bam | grep 'chrM' | cut -f 3)
-    # totalReads=$(samtools idxstats ./bam/${i}-sorted-pos.bam | awk '{SUM += $3} END {print SUM}')
-    # echo '==> mtDNA Content:' $(bc <<< "scale=2;100*$mtReads/$totalReads")'%'
-    # samtools flagstat -@ 10 ./bam/${i}-sorted-pos.bam > ./bam/${i}-sam.stat &
+# mtReads=$(samtools idxstats ./bam/${i}-sorted-pos.bam | grep 'chrM' | cut -f 3)
+# totalReads=$(samtools idxstats ./bam/${i}-sorted-pos.bam | awk '{SUM += $3} END {print SUM}')
+# echo '==> mtDNA Content:' $(bc <<< "scale=2;100*$mtReads/$totalReads")'%'
+# samtools flagstat -@ 10 ./bam/${i}-sorted-pos.bam > ./bam/${i}-sam.stat &
+```
 
 
 ## 5. sam to bam 同时去除 ChrM   
