@@ -39,19 +39,16 @@
 # 1
 conda create -n atac
 conda activate atac
-conda install -c bioconda trim-galore 
-conda install -c bioconda bowtie2 
-conda install -c bioconda macs2
-conda install -c bioconda samtools
-conda install -c bioconda sambamba
-conda install -c bioconda bedtools
-conda install -c bioconda picard
+mamba install samtools
+mamba install bowtie2
+mamba install sambamba
+mamba install bedtools
+mamba install macs3
+mamba install trim-galore
+mamba install bioconda::ucsc-bedclip
+mamba install bioconda::ucsc-bedgraphtobigwig
+
 # 2
-conda create -n macs3 python=3.8
-conda activate macs3
-conda install -c maximinio macs3
-conda install -c bioconda bedtools
-# 3
 conda create -n mqc python=3.6
 conda activate mqc
 pip install multiqc
