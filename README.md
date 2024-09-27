@@ -199,25 +199,26 @@ done
 - bedGraphToBigWig: error while loading shared libraries: libssl.so.1.0.0: cannot open shared object file: No such file or directory https://github.com/macs3-project/MACS/issues/505  
 - chromInfo.txt  https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/chromInfo.txt.gz
 
-首先下载两个脚本：bedGraphToBigWig 和 bedClip
-```bash
-wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig
-wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedClip  
-```
-    
-赋予可执行权限  
-```bash
-chmod +x bedGraphToBigWig
-chmod +x bedClip
-```
-    
-添加到环境变量中（打开bashrc，添加到最后一行，保存，source）  
-```bash
-vim ~/.bashrc
-export PATH="$PATH:/home/jjyang/downloads/bedClip"
-export PATH="$PATH:/home/jjyang/downloads/bedGraphToBigWig"
-source ~/.bashrc
-```
+以下脚本不用下载，直接跳到执行那一步，因为前期conda环境已经安装过这些脚本了   
+>首先下载两个脚本：bedGraphToBigWig 和 bedClip
+>```bash
+>wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig
+>wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedClip  
+>```
+>    
+>赋予可执行权限  
+>```bash
+>chmod +x bedGraphToBigWig
+>chmod +x bedClip
+>```
+>    
+>添加到环境变量中（打开bashrc，添加到最后一行，保存，source）  
+>```bash
+>vim ~/.bashrc
+>export PATH="$PATH:/home/jjyang/downloads/bedClip"
+>export PATH="$PATH:/home/jjyang/downloads/bedGraphToBigWig"
+>source ~/.bashrc
+>```
     
 执行以下脚本  
 
