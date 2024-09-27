@@ -334,7 +334,7 @@ nohup multiqc trim_fqc/*.zip -o trim_mqc/ &
 - https://github.com/hbctraining/Intro-to-ChIPseq/blob/master/lessons/07_handling-replicates-idr.md
 - https://rkhetani.github.io/Intro-to-ChIPseq/08_handling-replicates
 
->To run IDR the recommendation is to run MACS2 less stringently to allow a larger set of peaks to be identified for each replicate. In addition the narrowPeak files have to be sorted by the `-log10(p-value)` column. 
+>To run IDR the recommendation is to run MACS2 less stringently to allow a larger set of peaks to be identified for each replicate. In addition the narrowPeak files have to be sorted by the `-log10(p-value)` column.   
 先对peak的log10pvalue进行排序  
 ```
 cat filenames | while read i; do sort -k8,8nr macs3/${i}_peaks.narrowPeak > macs3/sorted_${i}_peaks.narrowPeak & ; done
