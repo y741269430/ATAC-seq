@@ -337,11 +337,10 @@ nohup multiqc trim_fqc/*.zip -o trim_mqc/ &
 
 >To run IDR the recommendation is to run MACS2 less stringently to allow a larger set of peaks to be identified for each replicate. In addition the narrowPeak files have to be sorted by the `-log10(p-value)` column.   
 
-先对peak的log10pvalue进行排序，并且取narrowPeak的前三列（计算peak的重叠区域仅仅是计算其位置的重复区间，跟里面peak的高低，形状之类的毫不相干，所以只取坐标位置即可）  
+对peak的log10pvalue进行排序
+```bash
+cat filenames | while read i; do sort -k8,8nr macs3/${i}_peaks.narrowPeak > macs3/sorted_${i}_peaks.narrowPeak; done &
 ```
-cat filenames | while read i; do sort -k8,8nr macs3/${i}_peaks.narrowPeak | cut -f1-3 > macs3/sorted_${i}_peaks.narrowPeak; done &
-```
-
 ```bash
 conda create -n idr
 conda activate idr
@@ -375,8 +374,12 @@ More detail on the output can be [found in the user manual](https://github.com/n
 
 - `-wo`: Write the original A (file 1) and B (file 2) entries plus the number of base pairs of overlap between the two features.  
 - `-f`: Minimum overlap required as a fraction of A. The value ranges from 0 to 1. We will use 0.3, requiring the overlap region being at least 30% of A.  
-- `-r`: Require that the fraction overlap be reciprocal for A and B. Together with the `-f` flag above, we require the overlap region being at least 30% of B as well.
+- `-r`: Require that the fraction overlap be reciprocal for A and B. Together with the `-f` flag above, we require the overlap region being at least 30% of B as well.  
 
+取narrowPeak的前三列（计算peak的重叠区域仅仅是计算其位置的重复区间，跟里面peak的高低，形状之类的毫不相干，所以只取坐标位置即可）  
+```bash
+cat filenames | while read i; do cut -f1-3 macs3/${i}_peaks.narrowPeak > macs3/top3_${i}_peaks.narrowPeak; done &
+```
 ```bash
 bedtools intersect \
 -wo -f 0.3 -r \
