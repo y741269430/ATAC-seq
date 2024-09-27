@@ -52,6 +52,12 @@ mamba install bioconda::ucsc-bedgraphtobigwig
 conda create -n mqc python=3.6
 conda activate mqc
 pip install multiqc
+
+# 3
+conda create -n idr
+conda activate idr
+conda install -c bioconda idr
+
 # 4
 ```
 ## 0.利用bowtie2构建小鼠基因组（mm39）索引（构建一次以后都不用做了）  
@@ -325,7 +331,14 @@ nohup multiqc trim_fqc/*.zip -o trim_mqc/ &
 
 ### 1.IDR 计算peaks之间的overlaping  
 具体参考  
-- https://github.com/hbctraining/Intro-to-ChIPseq/blob/master/lessons/07_handling-replicates-idr.md  
+- https://github.com/hbctraining/Intro-to-ChIPseq/blob/master/lessons/07_handling-replicates-idr.md
+- https://rkhetani.github.io/Intro-to-ChIPseq/08_handling-replicates
+
+>To run IDR the recommendation is to run MACS2 less stringently to allow a larger set of peaks to be identified for each replicate. In addition the narrowPeak files have to be sorted by the `-log10(p-value)` column. 
+先对peak的log10pvalue进行排序  
+```
+cat filenames | while read i; do sort -k8,8nr macs3/${i}_peaks.narrowPeak > macs3/sorted_${i}_peaks.narrowPeak & ; done
+```
 
 ```bash
 conda create -n idr
