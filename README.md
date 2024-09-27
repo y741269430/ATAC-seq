@@ -22,7 +22,7 @@
 - 8.macs3 peak文件转 bw（用于igv可视化） 
 - Remove blacklist  
 - fastqc质控  
-- 9.多种种方法计算peaks之间的重叠数量  
+- 9.多种种方法计算重复样本的 peak 之间的重叠的坐标位置   
 - 1. IDR 计算peaks之间的overlaping  
 - 2. bedtools 计算peaks之间的overlaping，输出bed文件  
 - 3. intervene 计算peaks之间的overlaping  
@@ -327,7 +327,7 @@ nohup multiqc fqc/*.zip -o mqc/ &
 nohup multiqc trim_fqc/*.zip -o trim_mqc/ &
 ```
 
-## 9.多种种方法计算peaks之间的重叠数量  
+## 9.多种种方法计算重复样本的 peak 之间的重叠的坐标位置 
 
 ### 1.IDR 计算peaks之间的overlaping  
 具体参考  
@@ -337,9 +337,9 @@ nohup multiqc trim_fqc/*.zip -o trim_mqc/ &
 
 >To run IDR the recommendation is to run MACS2 less stringently to allow a larger set of peaks to be identified for each replicate. In addition the narrowPeak files have to be sorted by the `-log10(p-value)` column.   
 
-先对peak的log10pvalue进行排序  
+先对peak的log10pvalue进行排序，并且取narrowPeak的前三列（计算peak的重叠区域仅仅是计算其位置的重复区间，跟里面peak的高低，形状之类的毫不相干，所以只取坐标位置即可）  
 ```
-cat filenames | while read i; do sort -k8,8nr macs3/${i}_peaks.narrowPeak > macs3/sorted_${i}_peaks.narrowPeak & ; done
+cat filenames | while read i; do sort -k8,8nr macs3/${i}_peaks.narrowPeak | cut -f1-3 > macs3/sorted_${i}_peaks.narrowPeak; done &
 ```
 
 ```bash
