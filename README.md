@@ -1,12 +1,12 @@
 # ATAC-seq workflow
 
 本文主要参考：  
-- https://yiweiniu.github.io/blog/2019/03/ATAC-seq-data-analysis-from-FASTQ-to-peaks/  
-- https://github.com/hbctraining/Intro-to-ChIPseq-flipped  
+- [ATAC-seq-data-analysis-from-FASTQ-to-peaks](https://yiweiniu.github.io/blog/2019/03/ATAC-seq-data-analysis-from-FASTQ-to-peaks/)
+- [Intro-to-ChIPseq-flipped](https://github.com/hbctraining/Intro-to-ChIPseq-flipped)
 - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8191135/
 - https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-1929-3
 - https://nf-co.re/chipseq/2.0.0/
-- https://github.com/Zhang-lab/ATAC-seq_QC_analysis
+- [ATAC-seq_QC_analysis](https://github.com/Zhang-lab/ATAC-seq_QC_analysis)
 
 ## 目录 ####
 - 0.创建conda环境用于ATACseq分析（也可以用mamba）
@@ -177,9 +177,9 @@ done
 
 ## narrowPeak和bed文件格式   
 
-具体参考   
-- https://macs3-project.github.io/MACS/docs/narrowPeak.html   
-- https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/01_Introduction_to_peak_files.md    
+参考   
+- [narrowPeak.html](https://macs3-project.github.io/MACS/docs/narrowPeak.html) 
+- [01_Introduction_to_peak_files.md](https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/01_Introduction_to_peak_files.md)    
 
 - A narrowPeak (.narrowPeak) file is used by the ENCODE project to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data. The narrowPeak file is a BED6+4 format, which means the first 6 columns of a standard BED file with 4 additional fields:  
 ![image](https://github.com/y741269430/ATAC-seq/blob/main/img/narrowPeak.png)  
@@ -193,7 +193,7 @@ done
 
 ## 8.macs3 peak文件转 bw（用于igv可视化） 
 参考：  
-- Build Signal Track https://github.com/macs3-project/MACS/wiki/Build-Signal-Track  
+- [Build-Signal-Track](https://github.com/macs3-project/MACS/wiki/Build-Signal-Track)
 - bedGraph to bigWig https://gist.github.com/taoliu/2469050  
 - bedGraphToBigWig: error while loading shared libraries: libssl.so.1.0.0: cannot open shared object file: No such file or directory https://github.com/macs3-project/MACS/issues/505  
 - chromInfo.txt  https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/chromInfo.txt.gz
@@ -284,8 +284,8 @@ bash atac7.sh
 ```
 
 ## Remove blacklist  
-具体参考  
-- https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md   
+参考  
+- [07_handling_peaks_bedtools.md](https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md)
 
 > **How were the 'blacklists compiled?** These blacklists were empirically derived from large compendia of data using a combination of automated heuristics and manual curation. Blacklists were generated for various species and genome versions including human, mouse, worm and fly. The lists can be [downloaded here](http://mitra.stanford.edu/kundaje/akundaje/release/blacklists/). For human, they used 80 open chromatin tracks (DNase and FAIRE datasets) and 12 ChIP-seq input/control tracks spanning ~60 cell lines in total. These blacklists are applicable to functional genomic data based on short-read sequencing (20-100bp reads). These are not directly applicable to RNA-seq or any other transcriptome data types.
 > 
