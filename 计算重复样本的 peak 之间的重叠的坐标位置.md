@@ -11,7 +11,7 @@
 ---
 ### 1.IDR 计算peaks之间的overlaping  
 具体参考  
-- https://github.com/hbctraining/Intro-to-ChIPseq/blob/master/lessons/07_handling-replicates-idr.md
+-  [07_handling-replicates-idr.md](https://github.com/hbctraining/Intro-to-ChIPseq/blob/master/lessons/07_handling-replicates-idr.md)
 - https://rkhetani.github.io/Intro-to-ChIPseq/08_handling-replicates
 - https://www.jianshu.com/p/d8a7056b4294
 
@@ -49,7 +49,7 @@ More detail on the output can be [found in the user manual](https://github.com/n
 
 ### 2.bedtools 计算peaks之间的overlaping，输出bed文件   
 具体参考   
-- https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md
+- [07_handling_peaks_bedtools.md](https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md)
 - https://www.jianshu.com/p/f8bbd51b5199  
 
 - `-wo`: Write the original A (file 1) and B (file 2) entries plus the number of base pairs of overlap between the two features.  
