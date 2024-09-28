@@ -11,8 +11,8 @@
 ---
 ### 1.IDR 计算peaks之间的overlaping  
 具体参考  
--  [07_handling-replicates-idr.md](https://github.com/hbctraining/Intro-to-ChIPseq/blob/master/lessons/07_handling-replicates-idr.md)
-- https://rkhetani.github.io/Intro-to-ChIPseq/08_handling-replicates
+- [07_handling-replicates-idr.md](https://github.com/hbctraining/Intro-to-ChIPseq/blob/master/lessons/07_handling-replicates-idr.md)
+- [08_handling-replicates](https://rkhetani.github.io/Intro-to-ChIPseq/08_handling-replicates)
 - https://www.jianshu.com/p/d8a7056b4294
 
 >To run IDR the recommendation is to run MACS2 less stringently to allow a larger set of peaks to be identified for each replicate. In addition the narrowPeak files have to be sorted by the `-log10(p-value)` column.   
