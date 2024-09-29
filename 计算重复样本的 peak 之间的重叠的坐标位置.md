@@ -63,6 +63,14 @@ More detail on the output can be [found in the user manual](https://github.com/n
 cat filenames | while read i; do cut -f1-3 macs3/${i}_peaks.narrowPeak > macs3/top3_${i}_peaks.narrowPeak; done &
 ```
 ```bash
+# 提取共有区间的peak（选这个）
+bedtools intersect \
+-wo -f 0.3 -r \
+-a ../macs3/a1_peaks.narrowPeak \
+-b ../macs3/b1_peaks.narrowPeak \
+> a1b1_overlaps.bed
+
+# 提取a1和b1都有的区间（仔细看上下这两个代码输出结果的区别）
 bedtools intersect \
 -wo -f 0.3 -r \
 -a ../macs3/a1_peaks.narrowPeak \
