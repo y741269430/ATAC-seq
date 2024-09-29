@@ -11,7 +11,7 @@
 
 ---
 ## 1.IDR 计算peaks之间的overlaping  
-具体参考  
+参考  
 - [07_handling-replicates-idr.md](https://github.com/hbctraining/Intro-to-ChIPseq/blob/master/lessons/07_handling-replicates-idr.md)
 - [08_handling-replicates](https://rkhetani.github.io/Intro-to-ChIPseq/08_handling-replicates)
 - https://www.jianshu.com/p/d8a7056b4294
@@ -22,6 +22,7 @@
 ```bash
 cat filenames | while read i; do sort -k8,8nr macs3/${i}_peaks.narrowPeak > macs3/sorted_${i}_peaks.narrowPeak; done &
 ```
+创建环境
 ```bash
 conda create -n idr
 conda activate idr
@@ -73,7 +74,7 @@ bedtools intersect \
 > 
 > _"...either 80% of the top 40% of the peaks identified from one replicate using an acceptable scoring method should overlap the list of peaks from the other replicate, OR peak lists scored using all available reads from each replicate should share more than 75% of regions in common."_ 
 > 
->  Since then, the field has moved towards more statistically motivated approaches like the [Irreproducibility Discovery Rate (IDR)](https://sites.google.com/site/anshulkundaje/projects/idr). The IDR framework was developed by Qunhua Li and Peter Bickel's group. It compares a pair of ranked lists of regions/peaks and assigns values that reflect its reproducibility. You can read more about IDR and how it works in this [linked lesson](handling-replicates-idr.md).
+> Since then, the field has moved towards more statistically motivated approaches like the [Irreproducibility Discovery Rate (IDR)](https://sites.google.com/site/anshulkundaje/projects/idr). The IDR framework was developed by Qunhua Li and Peter Bickel's group. It compares a pair of ranked lists of regions/peaks and assigns values that reflect its reproducibility. You can read more about IDR and how it works in this [linked lesson](handling-replicates-idr.md).
 > 
 > IDR analysis is extensively used by the ENCODE and modENCODE projects and is part of their ChIP-seq guidelines and standards. However, more recently there has been dicussion about the two approaches converging on similar results and so it remains to be seen what the gold standard will be.
 
