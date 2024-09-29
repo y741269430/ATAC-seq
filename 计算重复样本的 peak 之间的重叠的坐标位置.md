@@ -6,7 +6,8 @@
 - 3.intervene 计算peaks之间的overlaping  
 - 4.deeptools 计算peaks之间的overlaping和correlation  
 - 5.使用deeptools 将bam转为bw（用于igv可视化）
-- 6.deeptools 计算bam PE FragmentSize 统计片段长度  
+- 6.deeptools 计算bam PE FragmentSize 统计片段长度
+- 7.利用wigCorrelate计算样本相关性    
 
 ---
 ### 1.IDR 计算peaks之间的overlaping  
@@ -131,3 +132,24 @@ nohup bamPEFragmentSize -hist fragmentSize_CTRL.png -T "Fragment size of CTRL" -
 -b bam/BL6-TG1-ATAC-ION7.last.bam bam/BL6-TG2-ATAC-ION7.last.bam bam/BL6-TG3-ATAC-ION7.last.bam bam/BL6-TG4-ATAC-ION7.last.bam \
 --samplesLabel ion1 ion2 ion3 ion4 &
 ```
+
+### 7.利用wigCorrelate计算样本相关性   
+下载对应的程序，或者用conda 环境
+```bash  
+mamba install ucsc-wigcorrelate
+
+wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/wigCorrelate
+chmod +x wigCorrelate
+```
+执行   
+```bash
+~/downloads/wigCorrelate peak1.bw peak2.bw
+```
+
+
+
+
+
+
+
+
