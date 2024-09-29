@@ -10,7 +10,7 @@
 - 7.利用wigCorrelate计算样本相关性    
 
 ---
-### 1.IDR 计算peaks之间的overlaping  
+## 1.IDR 计算peaks之间的overlaping  
 具体参考  
 - [07_handling-replicates-idr.md](https://github.com/hbctraining/Intro-to-ChIPseq/blob/master/lessons/07_handling-replicates-idr.md)
 - [08_handling-replicates](https://rkhetani.github.io/Intro-to-ChIPseq/08_handling-replicates)
@@ -48,7 +48,7 @@ The output file format mimics the input file type, with some additional fields. 
 
 More detail on the output can be [found in the user manual](https://github.com/nboley/idr#output-file-format). Also, if you have any unanswered questions check out posts in the [Google groups forum](https://groups.google.com/forum/#!forum/idr-discuss).  
 
-### 2.bedtools 计算peaks之间的overlaping，输出bed文件   
+## 2.bedtools 计算peaks之间的overlaping，输出bed文件   
 具体参考   
 - [07_handling_peaks_bedtools.md](https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md)
 - https://www.jianshu.com/p/f8bbd51b5199  
@@ -68,7 +68,7 @@ bedtools intersect \
 -b ../macs3/b1_peaks.narrowPeak \
 -wo > a1b1_overlaps.bed
 ```
-> ### Other approaches for assessing peak reproducibility
+> ## Other approaches for assessing peak reproducibility
 > Historically, the ENCODE standard was using the overlaps that we described above but with a set of given criteria. This was developed based on experience with accumulated ENCODE ChIP-seq data, albeit with a much smaller sample size back then. In the paper [Landt et al, 2018](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3431496/) describe the approach as:
 > 
 > _"...either 80% of the top 40% of the peaks identified from one replicate using an acceptable scoring method should overlap the list of peaks from the other replicate, OR peak lists scored using all available reads from each replicate should share more than 75% of regions in common."_ 
@@ -78,7 +78,7 @@ bedtools intersect \
 > IDR analysis is extensively used by the ENCODE and modENCODE projects and is part of their ChIP-seq guidelines and standards. However, more recently there has been dicussion about the two approaches converging on similar results and so it remains to be seen what the gold standard will be.
 
 
-### 3.intervene 计算peaks之间的overlaping  
+## 3.intervene 计算peaks之间的overlaping  
 ```bash
 conda create -n intervene
 conda activate intervene
@@ -88,7 +88,7 @@ nohup intervene venn  -i ../macs3/narrow/*.narrowPeak --save-overlaps &
 nohup intervene upset -i ../m1/*_rmBL.narrowPeak --output ./ &
 ```
 
-### 4.deeptools 计算peaks之间的overlaping和correlation  
+## 4.deeptools 计算peaks之间的overlaping和correlation  
 ```bash
 conda create -n deeptools
 conda activate deeptools
@@ -99,7 +99,7 @@ nohup multiBamSummary bins --bamfiles bam/*last.bam --minMappingQuality 30 --lab
 nohup plotCorrelation -in readCounts.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
 ```
 
-### 5.使用deeptools 将bam转为bw（用于igv可视化）
+## 5.使用deeptools 将bam转为bw（用于igv可视化）
 ```bash
 vim g3_bam2bw.sh
 
@@ -113,12 +113,12 @@ nohup bamCoverage --bam ./bam/${i}.last.bam -o ./bw/${i}.bw --binSize 10 --norma
 done
 ```
 
-### 可视化  
+## 可视化  
 ```bash
 nohup multiBigwigSummary bins -b *.bw -o test.npz && plotCorrelation -in test.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
 ```
     
-### 6.deeptools 计算bam PE FragmentSize 统计片段长度  
+## 6.deeptools 计算bam PE FragmentSize 统计片段长度  
 ```bash
 nohup bamPEFragmentSize -hist fragmentSize_CON.png \
 -T "Fragment size of CON" \
@@ -127,7 +127,7 @@ nohup bamPEFragmentSize -hist fragmentSize_CON.png \
 --samplesLabel CTRL_1 CTRL_2 &
 ```
 
-### 7.利用wigCorrelate计算样本相关性   
+## 7.利用wigCorrelate计算样本相关性   
 下载对应的程序，或者用conda 环境
 ```bash  
 mamba install ucsc-wigcorrelate
