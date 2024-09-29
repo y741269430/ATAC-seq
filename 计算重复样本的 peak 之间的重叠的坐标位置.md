@@ -94,7 +94,7 @@ conda create -n deeptools
 conda activate deeptools
 conda install -c bioconda deeptools
 
-nohup multiBamSummary bins --bamfiles bam/*last.bam --minMappingQuality 30 --labels BL6-TG15-ATAC-CT BL6-TG16-ATAC-CT BL6-TG-ATAC-C2 BL6-TG-ATAC-C4 BL6-TG-ATAC-C5 BL6-TG-ATAC-C6 -out readCounts.npz --outRawCounts readCounts.tab && 
+nohup multiBamSummary bins --bamfiles bam/*last.bam --minMappingQuality 30 --labels CTRL_1 CTRL_2 CTRL_3 -out readCounts.npz --outRawCounts readCounts.tab && 
   
 nohup plotCorrelation -in readCounts.npz --corMethod spearman --skipZeros --log1p --removeOutliers -p scatterplot -o scatterplot_SpM.pdf --outFileCorMatrix Spearman.tab &
 ```
@@ -120,17 +120,11 @@ nohup multiBigwigSummary bins -b *.bw -o test.npz && plotCorrelation -in test.np
     
 ### 6.deeptools 计算bam PE FragmentSize 统计片段长度  
 ```bash
-nohup bamPEFragmentSize -hist fragmentSize_CTRL.png -T "Fragment size of CTRL" --maxFragmentLength 1000 \
--b bam/BL6-TG-ATAC-C2.last.bam bam/BL6-TG-ATAC-C4.last.bam bam/BL6-TG-ATAC-C5.last.bam bam/BL6-TG-ATAC-C6.last.bam bam/BL6-TG-ATAC-C7.last.bam bam/BL6-TG-ATAC-C8.last.bam bam/BL6-TG-ATAC-C9.last.bam \
---samplesLabel C2 C4 C5 C6 C7 C8 C9 &
-  
-  nohup bamPEFragmentSize -hist fragmentSize_CFA.png -T "Fragment size of CFA" --maxFragmentLength 1000 \
--b bam/BL6-TG1-ATAC-CFA3.last.bam bam/BL6-TG2-ATAC-CFA3.last.bam bam/BL6-TG-ATAC-CFA3_1.last.bam bam/BL6-TG-ATAC-CFA3_3.last.bam bam/BL6-TG-ATAC-CFA3_4.last.bam \
---samplesLabel TG1-cfa3 TG2-cfa3 cfa31 cfa33 cfa34 &
-  
-  nohup bamPEFragmentSize -hist fragmentSize_IoN.png -T "Fragment size of IoN" --maxFragmentLength 1000 \
--b bam/BL6-TG1-ATAC-ION7.last.bam bam/BL6-TG2-ATAC-ION7.last.bam bam/BL6-TG3-ATAC-ION7.last.bam bam/BL6-TG4-ATAC-ION7.last.bam \
---samplesLabel ion1 ion2 ion3 ion4 &
+nohup bamPEFragmentSize -hist fragmentSize_CON.png \
+-T "Fragment size of CON" \
+--maxFragmentLength 1000 \
+-b CTRL_1.last.bam CTRL_2.last.bam \
+--samplesLabel CTRL_1 CTRL_2 &
 ```
 
 ### 7.利用wigCorrelate计算样本相关性   
