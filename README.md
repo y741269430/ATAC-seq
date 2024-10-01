@@ -181,11 +181,11 @@ done
 - [narrowPeak.html](https://macs3-project.github.io/MACS/docs/narrowPeak.html) 
 - [01_Introduction_to_peak_files.md](https://github.com/hbctraining/Peak_analysis_workshop/blob/main/lessons/01_Introduction_to_peak_files.md)    
 
-- A narrowPeak (.narrowPeak) file is used by the ENCODE project to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data. The narrowPeak file is a BED6+4 format, which means the first 6 columns of a standard BED file with 4 additional fields:  
-![image](https://github.com/y741269430/ATAC-seq/blob/main/img/narrowPeak.png)  
+- A narrowPeak (.narrowPeak) file is used by the ENCODE project to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data. The narrowPeak file is a BED6+4 format, which means the first 6 columns of a standard BED file with 4 additional fields:
+<img src="https://github.com/y741269430/ATAC-seq/blob/main/img/narrowPeak.png" width="600" />
 
 - BED files require at least 3 fields indicating the genomic location of the feature, including the chromosome and the start and end coordinates. However, there are 9 additional fields that are optional, as shown in the image below.   
-![image](https://github.com/y741269430/ATAC-seq/blob/main/img/bed_file.png)  
+<img src="https://github.com/y741269430/ATAC-seq/blob/main/img/bed_file.png" width="600" />
 
 - Each row in the narrowPeak file represents a called peak. Below is an the example of a narrowPeak file, displaying the coordinate and statistical information for a handful of called peaks.  
 
