@@ -47,9 +47,9 @@ nohup bamCoverage --bam mergebam/Treatment.bam -o mergebam/Treatment.bw --binSiz
 
 ## 2.computeMatrix 计算   
 参考：  
-- https://deeptools.readthedocs.io/en/develop/content/tools/computeMatrix.html  
-- https://www.jianshu.com/p/2b386dd437d3
-- https://www.jianshu.com/p/1f38674b2475
+- [computeMatrix](https://deeptools.readthedocs.io/en/develop/content/tools/computeMatrix.html)  
+- [deepTools 使用指南](https://www.jianshu.com/p/2b386dd437d3)
+- [使用deeptools生成ChIP-seq信号热图与谱图](https://www.jianshu.com/p/1f38674b2475)
 
 <img src="https://github.com/y741269430/ATAC-seq/blob/main/img/computeMatrix_modes.png" width="600" />
 
