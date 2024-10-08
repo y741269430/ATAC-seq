@@ -89,7 +89,7 @@ Treatment.bw  \
 ```
 ## 3.绘图  
 参考： 
-- https://deeptools.readthedocs.io/en/develop/content/tools/plotProfile.html   
+- [plotProfile](https://deeptools.readthedocs.io/en/develop/content/tools/plotProfile.html)   
 ```bash
 plotProfile -m matrix.test.gz \
 -out profile_split.png \
@@ -103,7 +103,7 @@ plotProfile -m matrix.test.gz \
 --plotTitle "Test data profile"
 ```
 参考：  
-- https://deeptools.readthedocs.io/en/develop/content/tools/plotHeatmap.html   
+- [plotHeatmap](https://deeptools.readthedocs.io/en/develop/content/tools/plotHeatmap.html)   
 ```bash  
 plotHeatmap -m matrix.test.gz -out ExampleHeatmap.pdf
 
