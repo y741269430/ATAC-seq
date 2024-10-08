@@ -194,7 +194,7 @@ done
 ## 8.macs3 peak文件转 bw（用于igv可视化） 
 参考：  
 - [Build-Signal-Track](https://github.com/macs3-project/MACS/wiki/Build-Signal-Track)
-- bedGraph to bigWig https://gist.github.com/taoliu/2469050  
+- [bedGraph to bigWig](https://gist.github.com/taoliu/2469050)  
 - bedGraphToBigWig: error while loading shared libraries: libssl.so.1.0.0: cannot open shared object file: No such file or directory https://github.com/macs3-project/MACS/issues/505  
 - chromInfo.txt  https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/chromInfo.txt.gz
 
