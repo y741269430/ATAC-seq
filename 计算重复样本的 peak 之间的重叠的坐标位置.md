@@ -14,7 +14,7 @@
 参考  
 - [07_handling-replicates-idr.md](https://github.com/hbctraining/Intro-to-ChIPseq/blob/master/lessons/07_handling-replicates-idr.md)
 - [08_handling-replicates](https://rkhetani.github.io/Intro-to-ChIPseq/08_handling-replicates)
-- https://www.jianshu.com/p/d8a7056b4294
+- [第6篇：重复样本的处理——IDR](https://www.jianshu.com/p/d8a7056b4294)
 
 >To run IDR the recommendation is to run MACS2 less stringently to allow a larger set of peaks to be identified for each replicate. In addition the narrowPeak files have to be sorted by the `-log10(p-value)` column.   
 
@@ -52,8 +52,9 @@ More detail on the output can be [found in the user manual](https://github.com/n
 ## 2.bedtools 计算peaks之间的overlaping，输出bed文件   
 具体参考   
 - [07_handling_peaks_bedtools.md](https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md)
-- https://www.jianshu.com/p/f8bbd51b5199
-- https://www.jianshu.com/p/a2cff67c38a9
+- [最全Bedtools使用说明--只看本文就够了](https://www.jianshu.com/p/f8bbd51b5199)
+- [bedtools intersect用法 (intersectBed)](https://www.jianshu.com/p/a2cff67c38a9)
+
 
 - `-wo`: Write the original A (file 1) and B (file 2) entries plus the number of base pairs of overlap between the two features.  
 - `-f`: Minimum overlap required as a fraction of A. The value ranges from 0 to 1. We will use 0.3, requiring the overlap region being at least 30% of A.  
