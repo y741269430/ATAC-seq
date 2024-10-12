@@ -294,20 +294,33 @@ bash atac7.sh
 The black lists were downloaded from https://www.encodeproject.org/annotations/ENCSR636HFF/   
 
 ```bash 
-vim atac4_rmblackls.sh
+vim blackls_rm.sh
 
 #!/bin/bash
 ## remove blacklist (bedtools) ##
+
+# 检查是否提供了足够的参数
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <input_directory> <output_directory>"
+    exit 1
+fi
+
+# 获取输入和输出目录路径
+input_dir=$1
+output_dir=$2
 
 Blacklist="/home/jjyang/downloads/genome/mm39_GRCm39/ENCFF547MET.bed"
 
 cat filenames | while read i; 
 do
+input_file="$input_dir/${i}_peaks.narrowPeak"
+output_file="$output_dir/${i}_rmBL.narrowPeak"
+
 nohup bedtools intersect \
 -v \
--a ./macs3/${i}_peaks.narrowPeak \
+-a "$input_file" \
 -b ${Blacklist} | awk '{if($0~"chr") print}' \
-> ./macs3/narrow/${i}_rmBL.narrowPeak &
+> "$output_file" &
 done
 ```
 
