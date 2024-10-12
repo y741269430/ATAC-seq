@@ -42,8 +42,15 @@ nohup samtools index -@ 10 mergebam/Treatment.bam &
 
 # deeptools的bam转bw
 nohup bamCoverage --bam mergebam/CTRL.bam -o mergebam/CTRL.bw --binSize 10 --normalizeUsing RPKM & 
-nohup bamCoverage --bam mergebam/Treatment.bam -o mergebam/Treatment.bw --binSize 10 --normalizeUsing RPKM & 
+nohup bamCoverage --bam mergebam/Treatment.bam -o mergebam/Treatment.bw --binSize 10 --normalizeUsing RPKM &
+
+# 顺便把peak也call了，与单独样本call的peak，一同放在igv查看(这里的peak文件也可以接着做homer的motif预测)
+nohup macs3 callpeak -f BAMPE -t mergebam/CTRL.bam -g mm -n mergebam/CTRL -B -q 0.1 &  
+nohup macs3 callpeak -f BAMPE -t mergebam/Treatment.bam -g mm -n mergebam/Treatment -B -q 0.1 &  
+
 ```
+
+- [homer传送门](https://github.com/y741269430/homer)
 
 ## 2.computeMatrix 计算   
 参考：  
