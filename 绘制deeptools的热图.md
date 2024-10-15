@@ -32,6 +32,10 @@ head test.bed
 举例，我们这里将bam文件进行合并，然后再转为bw  
 
 ```bash
+# 合并前先确保bam文件是position排序而不是name排序！
+nohup samtools sort -@ 10 -O bam CTRL-sorted-name.bam -o CTRL_1.last.bam &
+nohup samtools sort -@ 10 -O bam Treatment-sorted-name.bam -o Treatment_1.last.bam &
+
 # 相同样本合并bam
 nohup samtools merge -@ 10 -b -o mergebam/CTRL.bam CTRL_1.last.bam CTRL_2.last.bam &
 nohup samtools merge -@ 10 -b -o mergebam/Treatment.bam Treatment_1.last.bam Treatment_2.last.bam &
