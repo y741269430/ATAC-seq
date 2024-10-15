@@ -33,8 +33,8 @@ head test.bed
 
 ```bash
 # 相同样本合并bam
-nohup samtools merge -@ 10 -b mergebam/CTRL.bam CTRL_1.last.bam CTRL_2.last.bam &
-nohup samtools merge -@ 10 -b mergebam/Treatment.bam Treatment_1.last.bam Treatment_2.last.bam &
+nohup samtools merge -@ 10 -b -o mergebam/CTRL.bam CTRL_1.last.bam CTRL_2.last.bam &
+nohup samtools merge -@ 10 -b -o mergebam/Treatment.bam Treatment_1.last.bam Treatment_2.last.bam &
 
 # 构建index
 nohup samtools index -@ 10 mergebam/CTRL.bam &
