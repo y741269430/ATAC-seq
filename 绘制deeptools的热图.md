@@ -68,7 +68,7 @@ nohup macs3 callpeak -f BAMPE -t mergebam/Treatment.bam -g mm -n mergebam/Treatm
 ```bash
 nohup computeMatrix reference-point \
 -S CTRL.bw \
--R /home/jjyang/downloads/genome/mm39_GRCm39/test.bed \
+-R /home/jjyang/downloads/genome/mm39_GRCm39/mm_gene_vM27.bed \
 --referencePoint TSS \
 -a 3000 -b 3000 \
 -p 10 \
@@ -77,7 +77,7 @@ nohup computeMatrix reference-point \
 
 nohup computeMatrix reference-point \
 -S Treatment.bw \
--R /home/jjyang/downloads/genome/mm39_GRCm39/test.bed \
+-R /home/jjyang/downloads/genome/mm39_GRCm39/mm_gene_vM27.bed \
 --referencePoint TSS \
 -a 3000 -b 3000 \
 -p 10 \
@@ -90,7 +90,7 @@ nohup computeMatrix reference-point \
 nohup computeMatrix scale-regions -S \
 CTRL.bw \
 Treatment.bw  \
--R /home/jjyang/downloads/genome/mm39_GRCm39/test.bed \
+-R /home/jjyang/downloads/genome/mm39_GRCm39/mm_gene_vM27.bed \
 --beforeRegionStartLength 3000 \
 --regionBodyLength 5000 \
 --afterRegionStartLength 3000 \
