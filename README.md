@@ -84,10 +84,10 @@ vim pre_trim.sh
 cat filenames | while read i; 
 do
 # paired end
-nohup trim_galore -q 25 --phred33 --length 20 -e 0.1 --stringency 1 --paired ./raw/${i}*_1.fq.gz ./raw/${i}*_2.fq.gz -o ./trim &
+nohup trim_galore -q 25 --phred33 --length 20 -e 0.1 --stringency 1 -j 40 --paired ./raw/${i}*_1.fq.gz ./raw/${i}*_2.fq.gz -o ./trim &
   
 # single end
-# nohup trim_galore -q 25 --phred33 --length 20 -e 0. 1 --stringency 1 ./raw/${i}*_1.fq.gz -o ./trim &
+# nohup trim_galore -q 25 --phred33 --length 20 -e 0. 1 --stringency 1 -j 40 ./raw/${i}*_1.fq.gz -o ./trim &
 done
 ```
 
