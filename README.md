@@ -13,6 +13,7 @@
 - 0.利用bowtie2构建小鼠基因组（mm39）索引（构建一次以后都不用做了）  
 - 1.开始——激活conda环境
 - 2.利用Trim adaptors去除接头
+- 2.1 利用trimmomatic去除接头(Illumina)
 - 3.比对到mm39 
 - 4.生成raw bam (optional) 
 - 5.sam to bam 同时去除 ChrM   
@@ -88,6 +89,25 @@ nohup trim_galore -q 25 --phred33 --length 20 -e 0.1 --stringency 1 -j 40 --pair
   
 # single end
 # nohup trim_galore -q 25 --phred33 --length 20 -e 0. 1 --stringency 1 -j 40 ./raw/${i}*_1.fq.gz -o ./trim &
+done
+```
+
+## 2.1 利用trimmomatic去除接头(Illumina)  
+```bash
+#!/bin/bash
+## trimmomatic ##
+
+cat filenames | while read i; 
+do
+nohup trimmomatic PE -phred33 -threads 4 \
+./RawData/${i}/${i}*_R1_001.fastq.gz \
+./RawData/${i}/${i}*_R2_001.fastq.gz \
+trim/${i}_forward_paired.fq.gz \
+trim/${i}_forward_unpaired.fq.gz \
+trim/${i}_reverse_paired.fq.gz \
+trim/${i}_reverse_unpaired.fq.gz \
+ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 &
+
 done
 ```
 
