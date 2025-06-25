@@ -39,6 +39,7 @@ mamba install sambamba
 mamba install bedtools
 mamba install macs3
 mamba install trim-galore
+mamba install trimmomatic
 mamba install bioconda::ucsc-bedclip
 mamba install bioconda::ucsc-bedgraphtobigwig
 
