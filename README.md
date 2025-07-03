@@ -17,11 +17,11 @@
 - 3.比对到mm39 
 - 4.生成raw bam (optional) 
 - 5.sam to bam 同时去除 ChrM   
-- 6.macs2（现已弃用）  
+- 6.~~macs2（现已弃用）~~  
 - 7.使用macs3进行call peak   
-- narrowPeak和bed文件格式   
-- 8.macs3 peak文件转 bw（用于igv可视化） 
-- Remove blacklist  
+- narrowPeak和bed文件格式
+- 8.Remove blacklist  
+- 9.macs3 peak文件转 bw（用于igv可视化） 
 - fastqc质控  
 - louvain 聚类  
  
@@ -212,7 +212,48 @@ done
 
 ---
 
-## 8.macs3 peak文件转 bw（用于igv可视化） 
+## 8.Remove blacklist  
+参考  
+- [07_handling_peaks_bedtools.md](https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md)
+
+> **How were the 'blacklists compiled?** These blacklists were empirically derived from large compendia of data using a combination of automated heuristics and manual curation. Blacklists were generated for various species and genome versions including human, mouse, worm and fly. The lists can be [downloaded here](http://mitra.stanford.edu/kundaje/akundaje/release/blacklists/). For human, they used 80 open chromatin tracks (DNase and FAIRE datasets) and 12 ChIP-seq input/control tracks spanning ~60 cell lines in total. These blacklists are applicable to functional genomic data based on short-read sequencing (20-100bp reads). These are not directly applicable to RNA-seq or any other transcriptome data types.
+> 
+> More information about the blacklist region is described in this [paper](https://www.nature.com/articles/s41598-019-45839-z). This is a more recent resource and the authors compiled blacklists that can be [downloaded here](https://github.com/Boyle-Lab/Blacklist/tree/master/lists). _This is the source for the bed file used in this workshop._ 
+
+The black lists were downloaded from https://www.encodeproject.org/annotations/ENCSR636HFF/   
+
+```bash 
+vim blackls_rm.sh
+
+#!/bin/bash
+## remove blacklist (bedtools) ##
+
+# 检查是否提供了足够的参数
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <input_directory> <output_directory>"
+    exit 1
+fi
+
+# 获取输入和输出目录路径
+input_dir=$1
+output_dir=$2
+
+Blacklist="/home/jjyang/downloads/genome/mm39_GRCm39/ENCFF547MET.bed"
+
+cat filenames | while read i; 
+do
+input_file="$input_dir/${i}_peaks.narrowPeak"
+output_file="$output_dir/${i}_rmBL.narrowPeak"
+
+nohup bedtools intersect \
+-v \
+-a "$input_file" \
+-b ${Blacklist} | awk '{if($0~"chr") print}' \
+> "$output_file" &
+done
+```
+
+## 9.macs3 peak文件转 bw（用于igv可视化） 
 参考：  
 - [Build-Signal-Track](https://github.com/macs3-project/MACS/wiki/Build-Signal-Track)
 - [bedGraph to bigWig](https://gist.github.com/taoliu/2469050)  
@@ -304,46 +345,8 @@ done
 bash atac7.sh
 ```
 
-## Remove blacklist  
-参考  
-- [07_handling_peaks_bedtools.md](https://github.com/hbctraining/Intro-to-ChIPseq-flipped/blob/main/lessons/07_handling_peaks_bedtools.md)
+如果嫌麻烦也可以参考：[计算重复样本的 peak 之间的重叠的坐标位置.md](https://github.com/y741269430/ATAC-seq/blob/main/%E8%AE%A1%E7%AE%97%E9%87%8D%E5%A4%8D%E6%A0%B7%E6%9C%AC%E7%9A%84%20peak%20%E4%B9%8B%E9%97%B4%E7%9A%84%E9%87%8D%E5%8F%A0%E7%9A%84%E5%9D%90%E6%A0%87%E4%BD%8D%E7%BD%AE.md#5%E4%BD%BF%E7%94%A8deeptools-%E5%B0%86bam%E8%BD%AC%E4%B8%BAbw%E7%94%A8%E4%BA%8Eigv%E5%8F%AF%E8%A7%86%E5%8C%96)
 
-> **How were the 'blacklists compiled?** These blacklists were empirically derived from large compendia of data using a combination of automated heuristics and manual curation. Blacklists were generated for various species and genome versions including human, mouse, worm and fly. The lists can be [downloaded here](http://mitra.stanford.edu/kundaje/akundaje/release/blacklists/). For human, they used 80 open chromatin tracks (DNase and FAIRE datasets) and 12 ChIP-seq input/control tracks spanning ~60 cell lines in total. These blacklists are applicable to functional genomic data based on short-read sequencing (20-100bp reads). These are not directly applicable to RNA-seq or any other transcriptome data types.
-> 
-> More information about the blacklist region is described in this [paper](https://www.nature.com/articles/s41598-019-45839-z). This is a more recent resource and the authors compiled blacklists that can be [downloaded here](https://github.com/Boyle-Lab/Blacklist/tree/master/lists). _This is the source for the bed file used in this workshop._ 
-
-The black lists were downloaded from https://www.encodeproject.org/annotations/ENCSR636HFF/   
-
-```bash 
-vim blackls_rm.sh
-
-#!/bin/bash
-## remove blacklist (bedtools) ##
-
-# 检查是否提供了足够的参数
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <input_directory> <output_directory>"
-    exit 1
-fi
-
-# 获取输入和输出目录路径
-input_dir=$1
-output_dir=$2
-
-Blacklist="/home/jjyang/downloads/genome/mm39_GRCm39/ENCFF547MET.bed"
-
-cat filenames | while read i; 
-do
-input_file="$input_dir/${i}_peaks.narrowPeak"
-output_file="$output_dir/${i}_rmBL.narrowPeak"
-
-nohup bedtools intersect \
--v \
--a "$input_file" \
--b ${Blacklist} | awk '{if($0~"chr") print}' \
-> "$output_file" &
-done
-```
 
 ## fastqc质控  
 ```bash
