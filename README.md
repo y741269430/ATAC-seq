@@ -124,16 +124,16 @@ vim atac1_bw2.sh
 ```bash
 #!/bin/bash
 
-#mm39="/home/jjyang/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39"
+mm39="/home/jjyang/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39"
 
-#cat filenames | while read i; 
-#do
-#nohup bowtie2 -p 4 --very-sensitive -X 2000 -k 10 \
-#-x ${mm39} \
-#-1 trim/${i}_forward_paired.fq.gz \
-#-2 trim/${i}_reverse_paired.fq.gz \
-#-S ./bam/${i}.sam 2> ./bam/${i}_map.txt & 
-#done
+cat filenames | while read i; 
+do
+nohup bowtie2 -p 4 --very-sensitive -X 2000 -k 10 \
+-x ${mm39} \
+-1 trim/${i}_forward_paired.fq.gz \
+-2 trim/${i}_reverse_paired.fq.gz \
+-S ./bam/${i}.sam 2> ./bam/${i}_map.txt & 
+done
 ```
 
 ## ~~4.生成raw bam (optional)~~ 
