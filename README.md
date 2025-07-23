@@ -12,10 +12,10 @@
 - 0.创建conda环境用于ATACseq分析（也可以用mamba）
 - 0.利用bowtie2构建小鼠基因组（mm39）索引（构建一次以后都不用做了）  
 - 1.开始——激活conda环境
-- 2.利用Trim adaptors去除接头
+- 2.~~利用Trim adaptors去除接头~~
 - 2.1 利用trimmomatic去除接头(Illumina)
 - 3.比对到mm39 
-- 4.生成raw bam (optional) 
+- 4.~~生成raw bam (optional)~~ 
 - 5.sam to bam 同时去除 ChrM   
 - 6.~~macs2（现已弃用）~~  
 - 7.使用macs3进行call peak   
