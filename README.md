@@ -144,7 +144,7 @@ while read i; do
   flagstat_qc=./logs/${i}.flagstat.qc
 
   # Step 1: 比对 + 转 BAM + 排序
-  bowtie2 -X2000 --mm --threads $nth_bwt2 -x $bwt2_idx \
+  bowtie2 -X2000 --mm --threads $nth_bwt2 -x $bwt2_idx -k 10 \
     -1 $fastq1 -2 $fastq2 2> $log_file | \
     samtools view -Su - | samtools sort -o $bam_file -
 
