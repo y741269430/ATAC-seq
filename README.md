@@ -64,11 +64,10 @@ nohup bowtie2-build GRCm38.primary_assembly.genome.fa /home/jjyang/downloads/gen
 ```
 
 ## 1.开始——激活conda环境
-
-创建文件夹   
 ```bash
 conda activate atac
 ```
+创建文件夹  
 ```bash
 mkdir -p raw trim bam macs3 logs bed
 ```
@@ -78,10 +77,11 @@ mkdir -p raw trim bam macs3 logs bed
 ls raw/*1.fq.gz |cut -d "_" -f 1 |cut -d "/" -f 2 > filenames
 ```
 
-## 2.利用Trim adaptors去除接头
+## ~~2.利用Trim adaptors去除接头~~ 
 ```bash
 vim pre_trim.sh
-
+```
+```bash
 #!/bin/bash
 ## trim_galore ##
 
@@ -96,6 +96,9 @@ done
 ```
 
 ## 2.1 利用trimmomatic去除接头(Illumina)  
+```bash
+vim pre_trim.sh
+```
 ```bash
 #!/bin/bash
 ## trimmomatic ##
@@ -117,7 +120,8 @@ done
 ## 3.比对到mm39 
 ```bash
 vim atac1_bw2.sh
-
+```
+```bash
 #!/bin/bash
 
 # Bowtie2 index path
@@ -172,10 +176,11 @@ wait
 #done
 ```
 
-## 4.生成raw bam (optional) 
+## ~~4.生成raw bam (optional)~~ 
 ```bash
 vim atac2_sam2bamop.sh
-
+```
+```bash
 #!/bin/bash
 ## sam to bam (samtools) ##
 ## sorted by position (samtools) ##
@@ -195,7 +200,8 @@ done
 ## 5.sam to bam 同时去除 ChrM   
 ```bash
 vim atac2_sam2lastbam.sh
-
+```
+```bash
 #!/bin/bash
 ## sam to bam (samtools) ##
 ## remove ChrM & sorted by position (samtools) ##
@@ -214,7 +220,8 @@ done
 ## ~~6.macs2（现已弃用）~~  
 ```bash
 vim atac3_macs2.sh
-
+```
+```bash
 #!/bin/bash
 ## peak calling (macs2) ##
 
@@ -227,7 +234,8 @@ done
 ## 7.使用macs3进行call peak   
 ```bash
 vim atac4_macs3.sh
-
+```
+```bash
 #!/bin/bash
 ## peak calling (macs3) ##
 
