@@ -67,8 +67,10 @@ nohup bowtie2-build GRCm38.primary_assembly.genome.fa /home/jjyang/downloads/gen
 
 创建文件夹   
 ```bash
-conda activate atac  
-mkdir -p raw clean trim bam macs2 macs2/narrow macs3 macs3/narrow
+conda activate atac
+```
+```bash
+mkdir -p raw trim bam macs3 logs bed
 ```
     
 生成一个filenames的文件，用来记录输出的文件名称（样本名称），例如：  
@@ -148,7 +150,7 @@ done
 # mtReads=$(samtools idxstats ./bam/${i}-sorted-pos.bam | grep 'chrM' | cut -f 3)
 # totalReads=$(samtools idxstats ./bam/${i}-sorted-pos.bam | awk '{SUM += $3} END {print SUM}')
 # echo '==> mtDNA Content:' $(bc <<< "scale=2;100*$mtReads/$totalReads")'%'
-# samtools flagstat -@ 10 ./bam/${i}-sorted-pos.bam > ./bam/${i}-sam.stat &
+# samtools flagstat -@ 10 ./bam/${i}-sorted-pos.bam > ./logs/${i}-sam.stat &
 ```
 
 ## 5.sam to bam 同时去除 ChrM   
@@ -166,8 +168,8 @@ nohup samtools view -@ 4 -h ./bam/${i}.sam | grep -v chrM | samtools sort -@ 4 -
 sambamba markdup -r -t 40 --overflow-list-size 600000 ./bam/${i}-rmChrM-sorted-pos.bam ./bam/${i}.last.bam & 
 done
 
-# samtools flagstat -@ 10 ./bam/${i}-rmChrM-sorted-pos.bam > ./bam/${i}-rmChrM-sorted-pos.stat &
-# samtools flagstat -@ 10 ./bam/${i}.last.bam > ./bam/${i}.last.stat &
+# samtools flagstat -@ 10 ./bam/${i}-rmChrM-sorted-pos.bam > ./logs/${i}-rmChrM-sorted-pos.stat &
+# samtools flagstat -@ 10 ./bam/${i}.last.bam > ./logs/${i}.last.stat &
 ```
 
 ## ~~6.macs2（现已弃用）~~  
