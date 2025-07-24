@@ -69,7 +69,7 @@ conda activate atac
 ```
 创建文件夹  
 ```bash
-mkdir -p raw trim bam macs3 logs bed
+mkdir -p trim bam macs3 logs bed
 ```
     
 生成一个filenames的文件，用来记录输出的文件名称（样本名称），例如：  
