@@ -106,8 +106,8 @@ vim pre_trim.sh
 cat filenames | while read i; 
 do
 nohup trimmomatic PE -phred33 -threads 4 \
-./RawData/${i}*_R1_001.fastq.gz \
-./RawData/${i}*_R2_001.fastq.gz \
+./RawData/${i}*_R1.fastq.gz \
+./RawData/${i}*_R2.fastq.gz \
 trim/${i}_forward_paired.fq.gz \
 trim/${i}_forward_unpaired.fq.gz \
 trim/${i}_reverse_paired.fq.gz \
