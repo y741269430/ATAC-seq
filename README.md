@@ -8,22 +8,25 @@
 - https://nf-co.re/chipseq/2.0.0/
 - [ATAC-seq_QC_analysis](https://github.com/Zhang-lab/ATAC-seq_QC_analysis)
 
-## 目录 ####
-- 0.创建conda环境用于ATACseq分析（也可以用mamba）
-- 0.利用bowtie2构建小鼠基因组（mm39）索引（构建一次以后都不用做了）  
-- 1.开始——激活conda环境
-- 2.~~利用Trim adaptors去除接头~~
-- 2.1 利用trimmomatic去除接头(Illumina)
-- 3.比对到mm39 
-- 4.~~生成raw bam (optional)~~ 
-- 5.sam to bam 同时去除 ChrM   
-- 6.~~macs2（现已弃用）~~  
-- 7.使用macs3进行call peak   
-- narrowPeak和bed文件格式
-- 8.Remove blacklist  
-- 9.macs3 peak文件转 bw（用于igv可视化） 
-- fastqc质控  
-- louvain 聚类  
+基本原理：    
+- 1.当发生DNA复制、基因转录时，DNA的致密高级结构变为松散状态，这部分打开的染色质被称之为开放染色质（open chromatin）。开放染色质可以和一些调控蛋白如转录因子和辅因子结合，染色质的这一特性就叫做染色质可接近性（chromatin accessibility）。染色质可接近性反映了染色质转录活跃程度。        
+- 2.真核生物染色质基本结构单位是核小体，由 147bp 的DNA缠绕在组蛋白八聚体上。核小体与核小体之间由 20-90bp 的DNA linkers所连接。因此，Tn5酶转座过程，可发生在核小体之间 20-90bp 的任何地方，从连接区中产生 < 90bp 的短片段，或核小体被夹在Tn5切割的DNA中间产生更大的片段。     
+- 3.文库核酸片段包含原始DNA插入片段和来自adapter两端的 135bp 测序的序列。这就形成了从 200bp - 1000bp 左右的文库片段。主要的片段堆积在160bp-200bp之间的形成高耸的peak。
+- 4.如果加入的Tn5酶不足以从细胞中获得染色质，或者是Tn5与DNA的比例太低，使转座反应不充分，无法获得理想范围的DNA片段，此时片段大小估计为800bp左右，该现象被称为under-tagmentation。
+- 5.解决办法：裂解均匀；延长在冰上的裂解时间；增加转座酶反应时间；在裂解前加入额外的PBS冲洗步骤，防止其他物质抑制裂解。        
+
+生信分析流程：   
+- 1.当我们数据下机之后，得到的fastq文件。使用`FastQC`软件对raw data进行质量评估。后续clean data同样需要评估。   
+- 2.使用`Trimmomatic`软件对原始数据进行质控（这一步主要是去除3’端的接头污染、去除低质量序列（保留MPAQ >= 30））。得到clean data。
+- 3.将clean data使用`bowtie2`软件与基因组进行比对，得到的sam文件使用`samtools`转换成bam。
+- 4.得到的bam文件，获取其唯一比对以及去重复reads的结果bam文件。
+- 5.使用`Deeptools`绘制TSS, Peak center 或GeneBody富集热图（依组学而定），展示数据在这些区域及前后3kb上的富集情况。
+- 6.使用`MACS2`或`MACS3`进行peak calling。
+- 7.使用`IDR`软件进行样品间高可信度的峰筛选.
+- 8.将bam文件转换成bigwig文件，使用`IGV`进行可视化。
+- 9.使用r包`ChIPseeker`对peak进行注释。
+- 10.使用`homer`或`MEME`进行motif预测。
+- 11.使用`MAnorm`（无生物学重复）或`DiffBind`（有生物学重复）进行差异peak分析.
  
 ---
 ## 0.创建conda环境用于ATACseq分析（也可以用mamba）
