@@ -149,6 +149,9 @@ nohup bowtie2 -p 4 --very-sensitive -X 2000 -k 10 \
 -S ./bam/${i}.sam 2> ./bam/${i}_map.txt & 
 done
 ```
+`-X` 设定最长的插入片段长度. Default: 500     
+`--very-sensitive`  提高识别的敏感度但是会降低比对速度     
+`-k` 默认设置下, bowtie2搜索出了一个read不同的比对结果, 并报告其中最好的比对结果(如果好几个最好的比对结果得分一致, 则随机挑选出其中一个). 而在该模式下, bowtie2最多搜索出一个read k个比对结果, 并将这些结果按得分降序报告出来。    
 
 ## ~~4.生成raw bam (optional)~~ 
 ```bash
@@ -218,6 +221,12 @@ do
 nohup macs3 callpeak -f BAMPE -t ./bam/${i}.last.bam -g mm -n ./macs3/${i} -B -q 0.1 &  
 done
 ```
+对于ATAC-seq来说，-f BAMPE 参数仅分析“正确配对”的比对，即下图中的A。    
+假如将bam转成bed，再去做call peak，这里通常是数据质量比较差的时候所作出的选择。理由是它不仅保留了双端“正确配对”的比对，也保留了单端的比对，即下图中的A和B。    
+(Note that the BEDTools program bamtobed cannot be used here, since its output is in a nonstandard BED format that MACS2 cannot analyze.)    
+[Harvardinformatics ATAC-seq](https://github.com/harvardinformatics/ATAC-seq/blob/master/README.md#alignments-to-analyze)    
+<img src="https://github.com/y741269430/ATAC-seq/blob/main/img/alignments.png" width="500" />    
+
 
 ## narrowPeak和bed文件格式   
 
