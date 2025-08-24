@@ -7,6 +7,7 @@
 - [From reads to insight: a hitchhiker’s guide to ATAC-seq data analysis](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-1929-3)
 - https://nf-co.re/chipseq/2.0.0/
 - [ATAC-seq_QC_analysis](https://github.com/Zhang-lab/ATAC-seq_QC_analysis)
+- [Harvardinformatics ATAC-seq](https://github.com/harvardinformatics/ATAC-seq)
 
 基本原理：    
 - 1.当发生DNA复制、基因转录时，DNA的致密高级结构变为松散状态，这部分打开的染色质被称之为开放染色质（open chromatin）。开放染色质可以和一些调控蛋白如转录因子和辅因子结合，染色质的这一特性就叫做染色质可接近性（chromatin accessibility）。染色质可接近性反映了染色质转录活跃程度。        
