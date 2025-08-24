@@ -153,6 +153,22 @@ done
 `--very-sensitive`  提高识别的敏感度但是会降低比对速度     
 `-k` 默认设置下, bowtie2搜索出了一个read不同的比对结果, 并报告其中最好的比对结果(如果好几个最好的比对结果得分一致, 则随机挑选出其中一个). 而在该模式下, bowtie2最多搜索出一个read k个比对结果, 并将这些结果按得分降序报告出来。    
 
+方法二：
+```bash
+#!/bin/bash
+
+mm39="/home/jjyang/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39"
+
+cat filenames | while read i; 
+do
+nohup bowtie2 -p 4 --very-sensitive -X 1000 \
+-x ${mm39} \
+-1 trim/${i}_forward_paired.fq.gz \
+-2 trim/${i}_reverse_paired.fq.gz \
+-S ./bam/${i}.sam 2> ./logs/${i}_map.txt & 
+done
+```
+
 ## ~~4.生成raw bam (optional)~~ 
 ```bash
 vim atac2_sam2bamop.sh
