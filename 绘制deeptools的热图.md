@@ -77,10 +77,7 @@ nohup macs3 callpeak -f BAMPE -t mergebam/Treatment.bam -g mm -n mergebam/Treatm
 2. 若**不指定归一化参数**，输出的BigWig文件信号值直接反映原始测序深度，不同样本间不可直接比较。    
 3. 其他归一化方式（如RPKM/BPM/SES）适用于特定场景，需根据实验设计选择。    
 
-
-
-
-## 2.computeMatrix 计算   
+## 2.computeMatrix 计算    
 参考：  
 - [computeMatrix](https://deeptools.readthedocs.io/en/develop/content/tools/computeMatrix.html)  
 - [deepTools 使用指南](https://www.jianshu.com/p/2b386dd437d3)
@@ -91,22 +88,42 @@ nohup macs3 callpeak -f BAMPE -t mergebam/Treatment.bam -g mm -n mergebam/Treatm
 ### single input files (reference-point mode)    
 ```bash
 nohup computeMatrix reference-point \
+--referencePoint TSS \
 -S CTRL.bw \
 -R /home/jjyang/downloads/genome/mm39_GRCm39/mm_gene_vM27.bed \
---referencePoint TSS \
--a 3000 -b 3000 \
+--beforeRegionStartLength 3000 \
+--afterRegionStartLength 3000 \
 -p 10 \
 --skipZeros \
+ --missingDataAsZero \
+--binSize 20  \
 -o matrix_TSS_CTRL.gz &
 
 nohup computeMatrix reference-point \
+--referencePoint TSS \
 -S Treatment.bw \
 -R /home/jjyang/downloads/genome/mm39_GRCm39/mm_gene_vM27.bed \
---referencePoint TSS \
--a 3000 -b 3000 \
+--beforeRegionStartLength 3000 \
+--afterRegionStartLength 3000 \
 -p 10 \
 --skipZeros \
+ --missingDataAsZero \
+--binSize 20  \
 -o matrix_TSS_Treatment.gz &
+
+nohup computeMatrix reference-point \
+--referencePoint TSS \
+-S CTRL.bw Treatment.bw \
+-R Homo_sapiens.GRCh38.112.chr.gtf \
+--samplesLabel CTRL Treatment \
+--beforeRegionStartLength 3000 \
+--afterRegionStartLength 3000 \
+-p 10 \
+--skipZeros \
+--missingDataAsZero \
+--binSize 20 \
+-o matrix_bin20.gz &
+
 ```
 
 ### multiple input files (scale-regions mode)   
@@ -140,10 +157,11 @@ plotProfile -m matrix.test.gz \
 参考：  
 - [plotHeatmap](https://deeptools.readthedocs.io/en/develop/content/tools/plotHeatmap.html)   
 ```bash  
-plotHeatmap -m matrix.test.gz -out ExampleHeatmap.pdf
+plotHeatmap -m matrix_TSS_CTRL.gz --colorList 'white,white,red' -out TSS_CTRL.pdf
+plotHeatmap -m matrix_TSS_CTRL.gz -out TSS_CTRL.pdf
 
-plotHeatmap -m matrix_TSS_CTRL.gz -out Heatmap_CTRL.png
-plotHeatmap -m matrix_TSS_Treatment.gz -out Heatmap_Treatment.png
+plotHeatmap -m matrix_bin20.gz --colorList 'white,white,red' -out TSS_TreVSCtrl.pdf
+plotHeatmap -m matrix_bin20.gz -out TSS_TreVSCtrl.pdf
 ```  
 
 
