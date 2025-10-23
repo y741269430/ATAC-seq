@@ -3,16 +3,8 @@
 本文主要参考：  
 - [ATAC-seq-data-analysis-from-FASTQ-to-peaks](https://yiweiniu.github.io/blog/2019/03/ATAC-seq-data-analysis-from-FASTQ-to-peaks/)
 - [Intro-to-ChIPseq-flipped](https://github.com/hbctraining/Intro-to-ChIPseq-flipped)
-- [Analytical Approaches for ATAC-seq Data Analysis](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8191135
-        
-        
-        
-        /)
-- [From reads to insight: a hitchhiker’s guide to ATAC-seq data analysis](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-1929-3
-        
-        
-        
-        )
+- [Analytical Approaches for ATAC-seq Data Analysis](https://currentprotocols.onlinelibrary.wiley.com/doi/10.1002/cphg.101)
+- [From reads to insight: a hitchhiker’s guide to ATAC-seq data analysis](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-1929-3)
 - https://nf-co.re/chipseq/2.0.0/
 - [ATAC-seq_QC_analysis](https://github.com/Zhang-lab/ATAC-seq_QC_analysis)
 - [Harvardinformatics ATAC-seq](https://github.com/harvardinformatics/ATAC-seq)
