@@ -3,8 +3,16 @@
 本文主要参考：  
 - [ATAC-seq-data-analysis-from-FASTQ-to-peaks](https://yiweiniu.github.io/blog/2019/03/ATAC-seq-data-analysis-from-FASTQ-to-peaks/)
 - [Intro-to-ChIPseq-flipped](https://github.com/hbctraining/Intro-to-ChIPseq-flipped)
-- [Analytical Approaches for ATAC-seq Data Analysis](https://currentprotocols.onlinelibrary.wiley.com/doi/10.1002/cphg.101)
-- [From reads to insight: a hitchhiker’s guide to ATAC-seq data analysis](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-1929-3)
+- [Analytical Approaches for ATAC-seq Data Analysis](https://currentprotocols.onlinelibrary.wiley.com/doi/10.1002/cphg.101
+        
+        
+        
+        )
+- [From reads to insight: a hitchhiker’s guide to ATAC-seq data analysis](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-1929-3
+        
+        
+        
+        )
 - https://nf-co.re/chipseq/2.0.0/
 - [ATAC-seq_QC_analysis](https://github.com/Zhang-lab/ATAC-seq_QC_analysis)
 - [Harvardinformatics ATAC-seq](https://github.com/harvardinformatics/ATAC-seq)
@@ -308,7 +316,10 @@ nohup bedtools intersect \
 done
 ```
 
-## 9.macs3 peak文件转 bw（用于igv可视化） 
+## 9. bam 转bw（用于igv可视化）+ 绘制TSS 富集热图        
+[绘制deeptools的热图](https://github.com/y741269430/ATAC-seq/blob/main/%E7%BB%98%E5%88%B6deeptools%E7%9A%84%E7%83%AD%E5%9B%BE.md)
+
+## 10.macs3 peak文件转 bw（用于igv可视化）    
 参考：  
 - [Build-Signal-Track](https://github.com/macs3-project/MACS/wiki/Build-Signal-Track)
 - [bedGraph to bigWig](https://gist.github.com/taoliu/2469050)  
