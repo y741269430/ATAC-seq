@@ -159,6 +159,7 @@ plotHeatmap -m matrix_TSS_CTRL.gz -out TSS_CTRL.pdf
 
 plotHeatmap -m matrix_bin20.gz --colorList 'white,white,red' -out TSS_TreVSCtrl.pdf
 plotHeatmap -m matrix_bin20.gz -out TSS_TreVSCtrl.pdf
+plotHeatmap -m matrix_bin20.gz --zMin 0 --zMax 3 -out TSS_TreVSCtrl.pdf
 ```  
 
 
