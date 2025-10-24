@@ -158,7 +158,7 @@ done
 ```bash
 #!/bin/bash
 
-mm39="/home/jjyang/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39"
+mm39="/home/jjyang/downloads/genome/mm_v112/bowtie2_idx/mm39"
 
 cat filenames | while read i; 
 do
