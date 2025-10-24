@@ -3,8 +3,8 @@
 本文主要参考：  
 - [ATAC-seq-data-analysis-from-FASTQ-to-peaks](https://yiweiniu.github.io/blog/2019/03/ATAC-seq-data-analysis-from-FASTQ-to-peaks/)
 - [Intro-to-ChIPseq-flipped](https://github.com/hbctraining/Intro-to-ChIPseq-flipped)
-- [Analytical Approaches for ATAC-seq Data Analysis](https://currentprotocols.onlinelibrary.wiley.com/doi/10.1002/cphg.101)
-- [From reads to insight: a hitchhiker’s guide to ATAC-seq data analysis](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-1929-3)
+- Analytical Approaches for ATAC-seq Data Analysis
+- From reads to insight: a hitchhiker’s guide to ATAC-seq data analysis
 - https://nf-co.re/chipseq/2.0.0/
 - [ATAC-seq_QC_analysis](https://github.com/Zhang-lab/ATAC-seq_QC_analysis)
 - [Harvardinformatics ATAC-seq](https://github.com/harvardinformatics/ATAC-seq)
@@ -139,7 +139,7 @@ vim atac1_bw2.sh
 ```bash
 #!/bin/bash
 
-mm39="/home/jjyang/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39"
+mm39="/home/jjyang/downloads/genome/mm_v112/bowtie2_idx/mm39"
 
 cat filenames | while read i; 
 do
