@@ -72,9 +72,10 @@ conda install -c bioconda idr
 ## 0.利用bowtie2构建小鼠基因组（mm39）索引（构建一次以后都不用做了）  
 
 ```bash
-conda activate atac  
-cd /home/jjyang/downloads/genome/mm39_GRCm39/ucsc_fa/  
-nohup bowtie2-build GRCm38.primary_assembly.genome.fa /home/jjyang/downloads/genome/mm39_GRCm39/bowtie2_idx/mm39 &
+conda activate atac
+cd downloads/genome/mm_v112
+mkdir bowtie2_idx
+nohup bowtie2-build Mus_musculus.GRCm39.dna_sm.chromosome.chr.fa ./bowtie2_idx/mm39 &
 ```
 
 ## 1.开始——激活conda环境
