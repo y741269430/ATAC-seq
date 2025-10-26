@@ -173,7 +173,6 @@ done
 ## hisat2/bowtie2 整合输出比对率         
 输出比对率文件
 ```bash
-conda activate rnaseq
 python MappingRateOutput.py logs/ alignment_res
 ```
 
