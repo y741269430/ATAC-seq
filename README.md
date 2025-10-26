@@ -278,9 +278,10 @@ done
 
 The black lists were downloaded from https://www.encodeproject.org/annotations/ENCSR636HFF/   
 
-```bash 
+```bash
 vim blackls_rm.sh
-
+```
+```bash 
 #!/bin/bash
 ## remove blacklist (bedtools) ##
 
