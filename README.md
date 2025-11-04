@@ -227,7 +227,7 @@ vim atac3_macs2.sh
 
 cat filenames | while read i; 
 do
-nohup macs2 callpeak -t ./bam/${i}.last.bam -g mm --nomodel --shift -75 --extsize 150  -n ./macs2/${i} -q 0.1 --keep-dup all &  
+nohup macs2 callpeak -t ./bam/${i}.last.bam -g 2723414844 -n ./macs2/${i} --shift -100 --extsize 200 --nomodel -B --SPMR --keep-dup all -q 0.1 --call-summits &
 done
 ```
     
