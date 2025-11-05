@@ -325,16 +325,10 @@ vim atac5_bam2bw.sh
 #!/bin/bash
 ## bamCoverage ##
 
-cat filenames | while read i; 
+cat filenames | while read i;
+#cat name.info | while IFS=$'\t' read -r old_name new_name; # 如果前面修改了文件名，这里就要用name.info来读取第二列，否则依然以filenames读取第一列
 do
 nohup bamCoverage --bam ./bam/${i}.last.bam -o bw/${i}.bw --binSize 10 --effectiveGenomeSize 2723414844 --normalizeUsing RPGC --outFileFormat bigwig -p 4 &
-done
-
-#!/bin/bash
-## bamCoverage ##
-
-cat name.info | while IFS=$'\t' read -r old_name new_name; do
-    nohup bamCoverage --bam "./bam/${new_name}.last.bam" -o "bw/${new_name}.bw" --binSize 10 --effectiveGenomeSize 2723414844 --normalizeUsing RPGC --outFileFormat bigwig -p 4 &
 done
 
 ```
