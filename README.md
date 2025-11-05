@@ -312,6 +312,9 @@ done
 blackls_rm.sh macs3 rm_blacklist
 ```
 
+## （可选）使用以下脚本将样本名更改为下游分析的名称，具体用法查看    
+[修改文件名](https://github.com/y741269430/ATAC-seq/blob/main/%E6%89%B9%E9%87%8F%E9%87%8D%E5%91%BD%E5%90%8D%E8%84%9A%E6%9C%AC.md)
+
 ## 9. bam 转bw（用于igv可视化）+ 绘制TSS 富集热图        
 [绘制deeptools的热图](https://github.com/y741269430/ATAC-seq/blob/main/%E7%BB%98%E5%88%B6deeptools%E7%9A%84%E7%83%AD%E5%9B%BE.md)
 
