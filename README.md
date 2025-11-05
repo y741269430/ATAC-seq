@@ -318,6 +318,30 @@ blackls_rm.sh macs3 rm_blacklist
 ## 9. bam 转bw（用于igv可视化）+ 绘制TSS 富集热图        
 [绘制deeptools的热图](https://github.com/y741269430/ATAC-seq/blob/main/%E7%BB%98%E5%88%B6deeptools%E7%9A%84%E7%83%AD%E5%9B%BE.md)
 
+```bash
+vim atac5_bam2bw.sh
+```
+```bash
+#!/bin/bash
+## bamCoverage ##
+
+cat filenames | while read i; 
+do
+nohup bamCoverage --bam ./bam/${i}.last.bam -o bw/${i}.bw --binSize 10 --effectiveGenomeSize 2723414844 --normalizeUsing RPGC --outFileFormat bigwig -p 4 &
+done
+
+#!/bin/bash
+## bamCoverage ##
+
+cat name.info | while IFS=$'\t' read -r old_name new_name; do
+    nohup bamCoverage --bam "./bam/${new_name}.last.bam" -o "bw/${new_name}.bw" --binSize 10 --effectiveGenomeSize 2723414844 --normalizeUsing RPGC --outFileFormat bigwig -p 4 &
+done
+
+```
+```bash
+bash vim atac5_bam2bw.sh
+```
+
 ## 10. homer 的motif预测      
 [homer](https://github.com/y741269430/homer)    
 
