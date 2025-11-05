@@ -312,7 +312,7 @@ done
 blackls_rm.sh macs3 rm_blacklist
 ```
 
-## （可选）使用以下脚本将样本名更改为下游分析的名称，具体用法查看    
+## 使用以下脚本将样本名更改为下游分析的名称（可选）       
 [修改文件名](https://github.com/y741269430/ATAC-seq/blob/main/%E6%89%B9%E9%87%8F%E9%87%8D%E5%91%BD%E5%90%8D%E8%84%9A%E6%9C%AC.md)
 
 ## 9. bam 转bw（用于igv可视化）+ 绘制TSS 富集热图        
@@ -321,10 +321,16 @@ blackls_rm.sh macs3 rm_blacklist
 ## 10. homer 的motif预测      
 [homer](https://github.com/y741269430/homer)    
 
-## 11. macs3 peak文件转 bw (可选)
+## 11. IDR分析    
+
+## 12. 差异peak分析（diffbind）    
+
+## 13. 富集分析    
+
+## macs3 peak文件转 bw (可选)     
 [peak2bw](https://github.com/y741269430/ATAC-seq/blob/main/macs3_peak%E6%96%87%E4%BB%B6%E8%BD%ACbw.md)
 
-## fastqc质控  
+## fastqc质控      
 ```bash
 nohup fastqc -q -t 30 raw/*.fq.gz -o fqc/ &
 nohup fastqc -q -t 30 trim/*.fq.gz -o trim_fqc/ &
