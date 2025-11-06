@@ -294,7 +294,7 @@ fi
 input_dir=$1
 output_dir=$2
 
-Blacklist="/home/jjyang/downloads/genome/mm39_GRCm39/ENCFF547MET.bed"
+Blacklist="/home/jjyang/downloads/genome/mm39_GRCm39/mm10_blacklist.bed"
 
 cat filenames | while read i; 
 do
