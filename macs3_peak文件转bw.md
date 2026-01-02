@@ -81,4 +81,10 @@ done
 bash atac_macs3tobw.sh
 ```
 
+## 4.bigwig 相关性校验              
+对于有生物学重复是样本，可以使用以下命令检验其相关性              
+```bash
+wigCorrelate H3K36me1_EE_rep1_FE.bw H3K36me1_EE_rep2_FE.bw
+```
+---
 这里面是使用bam文件转bigwig：[计算重复样本的 peak 之间的重叠的坐标位置.md](https://github.com/y741269430/ATAC-seq/blob/main/%E8%AE%A1%E7%AE%97%E9%87%8D%E5%A4%8D%E6%A0%B7%E6%9C%AC%E7%9A%84%20peak%20%E4%B9%8B%E9%97%B4%E7%9A%84%E9%87%8D%E5%8F%A0%E7%9A%84%E5%9D%90%E6%A0%87%E4%BD%8D%E7%BD%AE.md#5%E4%BD%BF%E7%94%A8deeptools-%E5%B0%86bam%E8%BD%AC%E4%B8%BAbw%E7%94%A8%E4%BA%8Eigv%E5%8F%AF%E8%A7%86%E5%8C%96)
