@@ -81,7 +81,7 @@ done
 bash atac_macs3tobw.sh
 ```
 
-## 4.bigwig 相关性校验              
+## 4.Calculate correlation between replicates                          
 对于有生物学重复是样本，可以使用以下命令检验其相关性              
 ```bash
 wigCorrelate H3K36me1_EE_rep1_FE.bw H3K36me1_EE_rep2_FE.bw
